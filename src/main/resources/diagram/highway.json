@@ -1,0 +1,51 @@
+{
+    "class_diagram": "highway",
+    "classes": [
+      {
+        "name": "Car",
+        "attributes": [
+          {
+            "attr": "type",
+            "type": "Integer"
+          }
+        ]
+      },
+      {
+        "name": "Location",
+        "attributes": [
+          {
+            "attr": "timestamp",
+            "type": "Integer"
+          },
+          {
+            "attr": "expiredTime",
+            "type": "Integer"
+          },
+          {
+            "attr": "pred",
+            "type": "String"
+          },
+          {
+            "attr": "succed",
+            "type": "String"
+          },
+          {
+            "attr": "passId",
+            "type": "String"
+          }
+        ]
+      }
+  
+    ],
+    "associations": [
+      {
+        "name": "Record",
+        "startClass": "Car",
+        "endClass": "Location",
+        "role": "locate",
+        "multi": "0..*",
+        "r_role": "relatedCar",
+        "r_multi": "1"
+      }
+    ]
+  }

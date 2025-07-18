@@ -1,0 +1,51 @@
+{
+  "class_diagram": "shenzhen",
+  "classes": [
+    {
+      "name": "Car",
+      "attributes": [
+        {
+          "attr": "speed",
+          "type": "Integer"
+        },
+        {
+          "attr": "direction",
+          "type": "Integer"
+        },
+        {
+          "attr": "status",
+          "type": "Integer"
+        }
+      ]
+    },
+    {
+      "name": "Location",
+      "attributes": [
+        {
+          "attr": "timestamp",
+          "type": "Integer"
+        },
+        {
+          "attr": "longitude",
+          "type": "Float"
+        },
+        {
+          "attr": "latitude",
+          "type": "Float"
+        }
+      ]
+    }
+
+  ],
+  "associations": [
+    {
+      "name": "Record",
+      "startClass": "Car",
+      "endClass": "Location",
+      "role": "locate",
+      "multi": "0..*",
+      "r_role": "relatedCar",
+      "r_multi": "1"
+    }
+  ]
+}
