@@ -1,0 +1,17 @@
+Model highway:
+
+
+
+context Car
+ inv : Car.allInstances()->notEmpty()
+ inv : not Car.allInstances()->isEmpty()
+
+ inv : Car.allInstances()->one( c | c.type = 1)
+ inv : Car.allInstances()->exists(c | c.type = 1)
+ inv : Car.allInstances()->forAll(c | c.type < 13)
+ inv : Car.allInstances()->includes("AA2696-1")
+ inv : Car.allInstances()->excludes("AA2696-1")
+ inv : Car.allInstances()->includesAll(Car.allInstances())
+ inv : Car.allInstances()->includesAll(Car.allInstances()->select(c | c.type = 1))
+ inv : Car.allInstances()->excludesAll(Car.allInstances())
+ inv : Car.allInstances()->excludesAll(Car.allInstances()->select(c | c.type = 1))

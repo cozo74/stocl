@@ -1,0 +1,15 @@
+Model highway:
+
+
+context Car
+
+ inv : not (self.type < 0 and self.type > 14)
+ inv : self.type >= 0 and self.type <= 13
+ inv : self.type > 0 or self.type < 14
+ inv : self.type = 3 xor self.type =4
+ inv : self.type > 0 implies self.type < 14
+
+context Location
+ inv: self.timestamp > 0 and self.timestamp < self.expiredTime
+ inv: self.pred = "null" xor self.succed = "null"
+ inv: self.pred = "null" implies self.succed <> "null"

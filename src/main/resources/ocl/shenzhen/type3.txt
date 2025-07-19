@@ -1,0 +1,16 @@
+Model shenzhen:
+
+
+context Car
+
+ inv : not (self.speed < 0 and self.speed > 120)
+ inv : self.direction >= 0 and self.direction <= 360
+ inv : self.status = 0 or self.status = 1
+ inv : self.status = 0 xor self.status = 1
+ inv : self.speed > 120 implies self.status = 1
+
+
+
+context Location
+ inv : self.longitude >= 113.7167 and self.longitude <= 114.6333
+ inv : self.latitude > 22.4000 and self.latitude < 22.8667

@@ -1,0 +1,18 @@
+Model shenzhen:
+
+
+
+context Car
+ inv : Car.allInstances()->notEmpty()
+ inv : not Car.allInstances()->isEmpty()
+
+ inv : self.locate->size()>0
+
+ inv : Car.allInstances()->one( c | c = "B08R93")
+ inv : Car.allInstances()->exists(c | c.status = 1)
+ inv : Car.allInstances()->forAll(c | c.speed < 120)
+ inv : Car.allInstances()->includes("B08R93")
+ inv : Car.allInstances()->excludes("B08R93")
+ inv : Car.allInstances()->includesAll(Car.allInstances()->select(c | c.status = 0))
+ inv : Car.allInstances()->excludesAll(Car.allInstances()->select(c | c.status = 0))
+

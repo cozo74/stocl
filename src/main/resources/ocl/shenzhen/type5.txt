@@ -1,0 +1,19 @@
+Model shenzhen:
+
+
+
+context Car
+ inv : Car.allInstances()->select(c | c.status = 0 or c.status = 1)->size() > 0
+ inv : Car.allInstances()->reject(c | c.status = 0)->size() > 0
+
+ inv : Car.allInstances()->select(c | c.status = 1)->union(Car.allInstances()->select(c | c.status = 0))->size() > 10
+ inv : Car.allInstances()->intersection(Car.allInstances()->select(c | c.status = 1))->size() > 10
+ inv : Car.allInstances()->symmetricDifference(Car.allInstances()->select(c | c.status = 1))->size() > 5
+ inv : Car.allInstances()->difference(Car.allInstances()->select(c | c.status = 1))->size() > 5
+
+
+context Location
+inv : Location.allInstances()->size() > 100
+inv : Location.allInstances()->select(l | l.longitude > 113.7167 and l.longitude < 114.6333)->size() > 0
+
+

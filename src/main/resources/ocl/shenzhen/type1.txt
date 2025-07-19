@@ -1,0 +1,27 @@
+Model shenzhen:
+
+
+context Car
+inv : self.speed >= 0
+inv : self.speed <= 120
+inv : self.direction >= 0
+inv : self.direction <= 360
+inv : self.status <= 100
+
+
+
+context Location
+inv: self.timestamp > 0
+inv : Location::allInstances()->forAll(l| l.longitude > 113.7167)
+inv : Location::allInstances()->forAll(l| l.longitude < 114.6333)
+inv : Location::allInstances()->forAll(l| l.latitude > 22.4000)
+inv : Location::allInstances()->forAll(l| l.latitude < 22.8667)
+
+
+
+
+
+-- 两字段比较
+inv: self.longitude > self.latitude
+inv: self.latitude < self.longitude
+

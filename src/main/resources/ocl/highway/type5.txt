@@ -1,0 +1,20 @@
+Model highway:
+
+
+
+context Car
+ inv : Car.allInstances()->size() > 10
+ inv : Car.allInstances()->select(c | c.type = 10 and c.type = 13)->size() > 0
+ inv : Car.allInstances()->reject(c | c.type = 10)->size() > 0
+
+ inv : Car.allInstances()->select(c | c.type = 10)->union(Car.allInstances()->select(c | c.type = 13))->size() > 10
+ inv : Car.allInstances()->intersection(Car.allInstances()->select(c | c.type = 13))->size() > 10
+ inv : Car.allInstances()->symmetricDifference(Car.allInstances()->select(c | c.type = 13))->size() > 5
+ inv : Car.allInstances()->difference(Car.allInstances()->select(c | c.type = 13))->size() > 5
+
+
+context Location
+inv : Location.allInstances()->size() > 100
+inv : Location.allInstances()->size() < 100000
+inv : Location.allInstances()->select(l | l.passId = '020000330101610073909720211031143802')->size() < 100
+inv : Location.allInstances()->select(c | c.timestamp > 1635724800000 and c.timestamp < 1635726168000)->size() > 10000

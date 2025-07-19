@@ -1,0 +1,23 @@
+Model highway:
+
+
+context Car
+inv : self.type >= 0
+inv : self.type <= 13
+inv : Car::allInstances()->forAll(c| c.type >= 0)
+inv : Car::allInstances()->forAll(c| c.type <= 13)
+
+
+context Location
+inv: self.expiredTime > 0
+inv: self.timestamp > 0
+inv : Location::allInstances()->forAll(l| l.expiredTime > 0)
+inv : Location::allInstances()->forAll(l| l.timestamp > 0)
+
+
+inv: self.expiredTime > self.timestamp
+inv: self.timestamp < self.expiredTime
+
+inv: Location::allInstances()->forAll(l|l.expiredTime > l.timestamp)
+inv: Location::allInstances()->forAll(l|l.timestamp < l.expiredTime)
+

@@ -1,0 +1,13 @@
+Model shenzhen:
+
+
+context Car
+ inv: self.speed <= 120 * 1.1
+ inv: self.direction / 10 <= 36
+
+
+
+
+context Location
+ inv: self.longitude > self.latitude + 1 
+ inv: self.latitude + 1 < self.longitude 
