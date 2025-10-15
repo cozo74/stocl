@@ -1,0 +1,98 @@
+Model highway :
+context Car
+inv : Car.allInstances()->size() > 10
+inv : Car.allInstances()->select( c |  c.type = 10 and c.type = 13  )->size() > 0
+inv : Car.allInstances()->select( c | not c.type = 10 )->size() > 0
+inv : Car.allInstances()->select( c | c.type = 10 )->union(Car.allInstances()->select( c | c.type = 13 ))->size() > 10
+inv :  Car.allInstances()->intersection(Car.allInstances()->select( c | c.type = 13 )) ->size() > 10
+inv : Car.allInstances()->difference(Car.allInstances()->select( c | c.type = 13 ) )->union(Car.allInstances()->select( c | c.type = 13 )->difference(Car.allInstances()))->size() > 5
+inv : Car.allInstances()->difference(Car.allInstances()->select( c | c.type = 13 ))->size() > 5
+context Location
+inv : Location.allInstances()->size() > 100
+inv : Location.allInstances()->size() < 100000
+inv : Location.allInstances()->select( l | l.passId = '020000330101610073909720211031143802' )->size() < 100
+inv : Location.allInstances()->select( c |  c.timestamp > 1635724800000 and c.timestamp < 1635726168000  )->size() > 10000
+
+Database highway :
+qry: Selection { car_id_count<=10 } { Group {count(car_id) } { Projection {car_id } { Car }  }  }  ;
+qry: Selection { car_id_count<=0 } { Group {count(car_id) } { Projection { car_id } { (Selection { type=10 } { Projection { car_id, type } { Projection {car_id } { Car }  Join Car }  }  Intersection Selection { type=13 } { Projection { car_id, type } { Projection {car_id } { Car }  Join Car }  } ) } }  }  ;
+qry: Selection { car_id_count<=0 } { Group {count(car_id) } { Projection { car_id } { Selection { type<>10 } { Projection { car_id, type } { Projection {car_id } { Car }  Join Car }  }  } }  }  ;
+qry: Selection { car_id_count<=10 } { Group {count(car_id) } { (Projection { car_id } { Selection { type=10 } { Projection { car_id, type } { Projection {car_id } { Car }  Join Car }  }  }) Union (Projection { car_id } { Selection { type=13 } { Projection { car_id, type } { Projection {car_id } { Car }  Join Car }  }  }) }  }  ;
+qry: Selection { car_id_count<=10 } { Group {count(car_id) } { (Projection {car_id } { Car } ) Intersection (Projection { car_id } { Selection { type=13 } { Projection { car_id, type } { Projection {car_id } { Car }  Join Car }  }  }) }  }  ;
+qry: Selection { car_id_count<=5 } { Group {count(car_id) } { ((Projection {car_id } { Car } ) Difference (Projection { car_id } { Selection { type=13 } { Projection { car_id, type } { Projection {car_id } { Car }  Join Car }  }  })) Union ((Projection { car_id } { Selection { type=13 } { Projection { car_id, type } { Projection {car_id } { Car }  Join Car }  }  }) Difference (Projection {car_id } { Car } )) }  }  ;
+qry: Selection { car_id_count<=5 } { Group {count(car_id) } { (Projection {car_id } { Car } ) Difference (Projection { car_id } { Selection { type=13 } { Projection { car_id, type } { Projection {car_id } { Car }  Join Car }  }  }) }  }  ;
+ 
+qry: Selection { location_id_count<=100 } { Group {count(location_id) } { Projection {location_id } { Location }  }  }  ;
+qry: Selection { location_id_count>=100000 } { Group {count(location_id) } { Projection {location_id } { Location }  }  }  ;
+qry: Selection { location_id_count>=100 } { Group {count(location_id) } { Projection { location_id } { Selection { passId='020000330101610073909720211031143802' } { Projection { location_id, passId } { Projection {location_id } { Location }  Join Location }  }  } }  }  ;
+qry: Selection { location_id_count<=10000 } { Group {count(location_id) } { Projection { location_id } { (Selection { timestamp>1635724800000 } { Projection { location_id, timestamp } { Projection {location_id } { Location }  Join Location }  }  Intersection Selection { timestamp<1635726168000 } { Projection { location_id, timestamp } { Projection {location_id } { Location }  Join Location }  } ) } }  }  ;
+ 
+
+SpecRewrite Iteration: 1
+Database highway:
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { Projection { car_id } { Car }  }  } ;
+qry : Selection { car_id_count<=0 } { Group { count(car_id) } { Projection { car_id } { Selection { type=10 and type=13 } { Projection { car_id,type } { Car }  }  }  }  } ;
+qry : Selection { car_id_count<=0 } { Group { count(car_id) } { Projection { car_id } { Selection { type<>10 } { Projection { car_id,type } { Car }  }  }  }  } ;
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { (Projection { car_id } { Selection { type=10 } { Projection { car_id,type } { Car }  }  }  Union Projection { car_id } { Selection { type=13 } { Projection { car_id,type } { Car }  }  } ) }  } ;
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { (Projection { car_id } { Car }  Intersection Projection { car_id } { Selection { type=13 } { Projection { car_id,type } { Car }  }  } ) }  } ;
+qry : Selection { car_id_count<=5 } { Group { count(car_id) } { ((Projection { car_id } { Car }  Difference Projection { car_id } { Selection { type=13 } { Projection { car_id,type } { Car }  }  } ) Union (Projection { car_id } { Selection { type=13 } { Projection { car_id,type } { Car }  }  }  Difference Projection { car_id } { Car } )) }  } ;
+qry : Selection { car_id_count<=5 } { Group { count(car_id) } { (Projection { car_id } { Car }  Difference Projection { car_id } { Selection { type=13 } { Projection { car_id,type } { Car }  }  } ) }  } ;
+qry : Selection { location_id_count<=100 } { Group { count(location_id) } { Projection { location_id } { Location }  }  } ;
+qry : Selection { location_id_count>=100000 } { Group { count(location_id) } { Projection { location_id } { Location }  }  } ;
+qry : Selection { location_id_count>=100 } { Group { count(location_id) } { Projection { location_id } { Selection { passId='020000330101610073909720211031143802' } { Projection { location_id,passId } { Location }  }  }  }  } ;
+qry : Selection { location_id_count<=10000 } { Group { count(location_id) } { Projection { location_id } { Selection { timestamp>1635724800000 and timestamp<1635726168000 } { Projection { location_id,timestamp } { Location }  }  }  }  } ;
+
+GenRewrite Iteration: 1
+Database highway:
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { Projection { car_id } { Car }  }  } ;
+qry : Selection { car_id_count<=0 } { Group { count(car_id) } { Projection { car_id } { Selection { type=10 and type=13 } { Car }  }  }  } ;
+qry : Selection { car_id_count<=0 } { Group { count(car_id) } { Projection { car_id } { Selection { type<>10 } { Car }  }  }  } ;
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { (Projection { car_id } { Selection { type=10 } { Car }  }  Union Projection { car_id } { Selection { type=13 } { Car }  } ) }  } ;
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { (Projection { car_id } { Car }  Intersection Projection { car_id } { Selection { type=13 } { Car }  } ) }  } ;
+qry : Selection { car_id_count<=5 } { Group { count(car_id) } { ((Projection { car_id } { Car }  Difference Projection { car_id } { Selection { type=13 } { Car }  } ) Union (Projection { car_id } { Selection { type=13 } { Car }  }  Difference Projection { car_id } { Car } )) }  } ;
+qry : Selection { car_id_count<=5 } { Group { count(car_id) } { (Projection { car_id } { Car }  Difference Projection { car_id } { Selection { type=13 } { Car }  } ) }  } ;
+qry : Selection { location_id_count<=100 } { Group { count(location_id) } { Projection { location_id } { Location }  }  } ;
+qry : Selection { location_id_count>=100000 } { Group { count(location_id) } { Projection { location_id } { Location }  }  } ;
+qry : Selection { location_id_count>=100 } { Group { count(location_id) } { Projection { location_id } { Selection { passId='020000330101610073909720211031143802' } { Location }  }  }  } ;
+qry : Selection { location_id_count<=10000 } { Group { count(location_id) } { Projection { location_id } { Selection { timestamp>1635724800000 and timestamp<1635726168000 } { Location }  }  }  } ;
+
+SpecRewrite Iteration: 2
+Database highway:
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { Projection { car_id } { Car }  }  } ;
+qry : Selection { car_id_count<=0 } { Group { count(car_id) } { Projection { car_id } { Selection { type=10 and type=13 } { Car }  }  }  } ;
+qry : Selection { car_id_count<=0 } { Group { count(car_id) } { Projection { car_id } { Selection { type<>10 } { Car }  }  }  } ;
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { (Projection { car_id } { Selection { type=10 } { Car }  }  Union Projection { car_id } { Selection { type=13 } { Car }  } ) }  } ;
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { (Projection { car_id } { Car }  Intersection Projection { car_id } { Selection { type=13 } { Car }  } ) }  } ;
+qry : Selection { car_id_count<=5 } { Group { count(car_id) } { ((Projection { car_id } { Car }  Difference Projection { car_id } { Selection { type=13 } { Car }  } ) Union (Projection { car_id } { Selection { type=13 } { Car }  }  Difference Projection { car_id } { Car } )) }  } ;
+qry : Selection { car_id_count<=5 } { Group { count(car_id) } { (Projection { car_id } { Car }  Difference Projection { car_id } { Selection { type=13 } { Car }  } ) }  } ;
+qry : Selection { location_id_count<=100 } { Group { count(location_id) } { Projection { location_id } { Location }  }  } ;
+qry : Selection { location_id_count>=100000 } { Group { count(location_id) } { Projection { location_id } { Location }  }  } ;
+qry : Selection { location_id_count>=100 } { Group { count(location_id) } { Projection { location_id } { Selection { passId='020000330101610073909720211031143802' } { Location }  }  }  } ;
+qry : Selection { location_id_count<=10000 } { Group { count(location_id) } { Projection { location_id } { Selection { timestamp>1635724800000 and timestamp<1635726168000 } { Location }  }  }  } ;
+
+GenRewrite Iteration: 2
+Database highway:
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { Projection { car_id } { Car }  }  } ;
+qry : Selection { car_id_count<=0 } { Group { count(car_id) } { Projection { car_id } { Selection { type=10 and type=13 } { Car }  }  }  } ;
+qry : Selection { car_id_count<=0 } { Group { count(car_id) } { Projection { car_id } { Selection { type<>10 } { Car }  }  }  } ;
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { (Projection { car_id } { Selection { type=10 } { Car }  }  Union Projection { car_id } { Selection { type=13 } { Car }  } ) }  } ;
+qry : Selection { car_id_count<=10 } { Group { count(car_id) } { (Projection { car_id } { Car }  Intersection Projection { car_id } { Selection { type=13 } { Car }  } ) }  } ;
+qry : Selection { car_id_count<=5 } { Group { count(car_id) } { ((Projection { car_id } { Car }  Difference Projection { car_id } { Selection { type=13 } { Car }  } ) Union (Projection { car_id } { Selection { type=13 } { Car }  }  Difference Projection { car_id } { Car } )) }  } ;
+qry : Selection { car_id_count<=5 } { Group { count(car_id) } { (Projection { car_id } { Car }  Difference Projection { car_id } { Selection { type=13 } { Car }  } ) }  } ;
+qry : Selection { location_id_count<=100 } { Group { count(location_id) } { Projection { location_id } { Location }  }  } ;
+qry : Selection { location_id_count>=100000 } { Group { count(location_id) } { Projection { location_id } { Location }  }  } ;
+qry : Selection { location_id_count>=100 } { Group { count(location_id) } { Projection { location_id } { Selection { passId='020000330101610073909720211031143802' } { Location }  }  }  } ;
+qry : Selection { location_id_count<=10000 } { Group { count(location_id) } { Projection { location_id } { Selection { timestamp>1635724800000 and timestamp<1635726168000 } { Location }  }  }  } ;
+
+USE highway;
+SELECT * FROM ( SELECT COUNT(car_id) AS car_id_count FROM ( SELECT car_id FROM Car ) AS sq1 ) AS sq2 WHERE car_id_count<=10;
+SELECT * FROM ( SELECT COUNT(car_id) AS car_id_count FROM ( SELECT car_id FROM Car WHERE type=10 AND type=13 ) AS sq2 ) AS sq3 WHERE car_id_count<=0;
+SELECT * FROM ( SELECT COUNT(car_id) AS car_id_count FROM ( SELECT car_id FROM Car WHERE type<>10 ) AS sq2 ) AS sq3 WHERE car_id_count<=0;
+SELECT * FROM ( SELECT COUNT(car_id) AS car_id_count FROM ( (SELECT car_id FROM Car WHERE type=10)  UNION  (SELECT car_id FROM Car WHERE type=13) ) AS sq6 ) AS sq7 WHERE car_id_count<=10;
+SELECT * FROM ( SELECT COUNT(car_id) AS car_id_count FROM ( (SELECT car_id FROM Car)  INTERSECT  (SELECT car_id FROM Car WHERE type=13) ) AS sq5 ) AS sq6 WHERE car_id_count<=10;
+SELECT * FROM ( SELECT COUNT(car_id) AS car_id_count FROM ( ((SELECT car_id FROM Car)  EXCEPT  (SELECT car_id FROM Car WHERE type=13))  UNION  ((SELECT car_id FROM Car WHERE type=13)  EXCEPT  (SELECT car_id FROM Car)) ) AS sq12 ) AS sq13 WHERE car_id_count<=5;
+SELECT * FROM ( SELECT COUNT(car_id) AS car_id_count FROM ( (SELECT car_id FROM Car)  EXCEPT  (SELECT car_id FROM Car WHERE type=13) ) AS sq5 ) AS sq6 WHERE car_id_count<=5;
+SELECT * FROM ( SELECT COUNT(location_id) AS location_id_count FROM ( SELECT location_id FROM Location ) AS sq1 ) AS sq2 WHERE location_id_count<=100;
+SELECT * FROM ( SELECT COUNT(location_id) AS location_id_count FROM ( SELECT location_id FROM Location ) AS sq1 ) AS sq2 WHERE location_id_count>=100000;
+SELECT * FROM ( SELECT COUNT(location_id) AS location_id_count FROM ( SELECT location_id FROM Location WHERE passId='020000330101610073909720211031143802' ) AS sq2 ) AS sq3 WHERE location_id_count>=100;
+SELECT * FROM ( SELECT COUNT(location_id) AS location_id_count FROM ( SELECT location_id FROM Location WHERE timestamp>1635724800000 AND timestamp<1635726168000 ) AS sq2 ) AS sq3 WHERE location_id_count<=10000;

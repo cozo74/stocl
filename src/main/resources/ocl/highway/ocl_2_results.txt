@@ -1,0 +1,56 @@
+Model highway :
+context Car
+inv : self.type - 1 >= 0
+inv : 0 <= self.type - 1
+context Location
+inv : self.expiredTime + 60000 > self.timestamp
+inv : self.expiredTime + 60 * 1000 > self.timestamp
+inv : self.expiredTime > self.timestamp - 60 * 1000
+
+Database highway :
+qry: Selection { type-1<0 } { Projection { car_id, type-1 } { Projection { car_id, type } { Projection { car_id } { Car } Join Car }  }  }  ;
+qry: Selection { type-1<0 } { Projection { car_id, type-1 } { Projection { car_id, type } { Projection { car_id } { Car } Join Car }  }  }  ;
+ 
+qry: Selection { expiredTime+60000<=timestamp }{ Projection { location_id, expiredTime+60000 } { Projection { location_id, expiredTime } { Projection { location_id } { Location } Join Location }  }  } ;
+qry: Selection { expiredTime+60*1000<=timestamp }{ Projection { location_id, expiredTime+60*1000 } { Projection { location_id, expiredTime } { Projection { location_id } { Location } Join Location }  }  } ;
+qry: Selection { expiredTime<=timestamp-60*1000 }{ Projection { location_id, expiredTime } { Projection { location_id } { Location } Join Location }  } ;
+ 
+
+SpecRewrite Iteration: 1
+Database highway:
+qry : Selection { type-1<0 } { Projection { car_id,type-1 } { Projection { car_id,type } { Car }  }  } ;
+qry : Selection { type-1<0 } { Projection { car_id,type-1 } { Projection { car_id,type } { Car }  }  } ;
+qry : Selection { expiredTime+60000<=timestamp } { Projection { location_id,expiredTime+60000 } { Projection { location_id,expiredTime } { Location }  }  } ;
+qry : Selection { expiredTime+60*1000<=timestamp } { Projection { location_id,expiredTime+60*1000 } { Projection { location_id,expiredTime } { Location }  }  } ;
+qry : Selection { expiredTime<=timestamp-60*1000 } { Projection { location_id,expiredTime } { Location }  } ;
+
+GenRewrite Iteration: 1
+Database highway:
+qry : Projection { car_id,type-1 } { Selection { type-1<0 } { Car }  } ;
+qry : Projection { car_id,type-1 } { Selection { type-1<0 } { Car }  } ;
+qry : Projection { location_id,expiredTime+60000 } { Selection { expiredTime+60000<=timestamp } { Location }  } ;
+qry : Projection { location_id,expiredTime+60*1000 } { Selection { expiredTime+60*1000<=timestamp } { Location }  } ;
+qry : Projection { location_id,expiredTime } { Selection { expiredTime<=timestamp-60*1000 } { Location }  } ;
+
+SpecRewrite Iteration: 2
+Database highway:
+qry : Projection { car_id,type-1 } { Selection { type-1<0 } { Car }  } ;
+qry : Projection { car_id,type-1 } { Selection { type-1<0 } { Car }  } ;
+qry : Projection { location_id,expiredTime+60000 } { Selection { expiredTime+60000<=timestamp } { Location }  } ;
+qry : Projection { location_id,expiredTime+60*1000 } { Selection { expiredTime+60*1000<=timestamp } { Location }  } ;
+qry : Projection { location_id,expiredTime } { Selection { expiredTime<=timestamp-60*1000 } { Location }  } ;
+
+GenRewrite Iteration: 2
+Database highway:
+qry : Projection { car_id,type-1 } { Selection { type-1<0 } { Car }  } ;
+qry : Projection { car_id,type-1 } { Selection { type-1<0 } { Car }  } ;
+qry : Projection { location_id,expiredTime+60000 } { Selection { expiredTime+60000<=timestamp } { Location }  } ;
+qry : Projection { location_id,expiredTime+60*1000 } { Selection { expiredTime+60*1000<=timestamp } { Location }  } ;
+qry : Projection { location_id,expiredTime } { Selection { expiredTime<=timestamp-60*1000 } { Location }  } ;
+
+USE highway;
+SELECT car_id,type-1 FROM Car WHERE type-1<0;
+SELECT car_id,type-1 FROM Car WHERE type-1<0;
+SELECT location_id,expiredTime+60000 FROM Location WHERE expiredTime+60000<=timestamp;
+SELECT location_id,expiredTime+60*1000 FROM Location WHERE expiredTime+60*1000<=timestamp;
+SELECT location_id,expiredTime FROM Location WHERE expiredTime<=timestamp-60*1000;

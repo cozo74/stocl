@@ -1,0 +1,70 @@
+Model shenzhen :
+context Car
+inv :  not ( self.speed < 0 and self.speed > 120 ) 
+inv :  self.direction >= 0 and self.direction <= 360 
+inv :  self.status = 0 or self.status = 1 
+inv :  ( self.status = 0 and not self.status = 1 ) or ( not self.status = 0 and self.status = 1 ) 
+inv :  not self.speed > 120 or self.status = 1 
+context Location
+inv :  self.longitude >= 113.7167 and self.longitude <= 114.6333 
+inv :  self.latitude > 22.4000 and self.latitude < 22.8667 
+
+Database shenzhen :
+qry: ((Selection { speed<0 } { Projection { car_id, speed } { Projection { car_id } { Car } Join Car }  }  Intersection Selection { speed>120 } { Projection { car_id, speed } { Projection { car_id } { Car } Join Car }  } )) ;
+qry: (Projection { car_id, direction } { Projection { car_id } { Car } Join Car }  Difference ((Selection { direction>=0 } { Projection { car_id, direction } { Projection { car_id } { Car } Join Car }  }  Intersection Selection { direction<=360 } { Projection { car_id, direction } { Projection { car_id } { Car } Join Car }  } ))) ;
+qry: (Projection { car_id, status } { Projection { car_id } { Car } Join Car }  Difference ((Selection { status=0 } { Projection { car_id, status } { Projection { car_id } { Car } Join Car }  }  Union Selection { status=1 } { Projection { car_id, status } { Projection { car_id } { Car } Join Car }  } ))) ;
+qry: (Projection { car_id, status } { Projection { car_id } { Car } Join Car }  Difference ((((Selection { status=0 } { Projection { car_id, status } { Projection { car_id } { Car } Join Car }  }  Intersection Selection { status<>1 } { Projection { car_id, status } { Projection { car_id } { Car } Join Car }  } )) Union ((Selection { status<>0 } { Projection { car_id, status } { Projection { car_id } { Car } Join Car }  }  Intersection Selection { status=1 } { Projection { car_id, status } { Projection { car_id } { Car } Join Car }  } ))))) ;
+qry: (Projection { car_id, speed } { Projection { car_id } { Car } Join Car }  Difference ((Selection { speed<=120 } { Projection { car_id, speed } { Projection { car_id } { Car } Join Car }  }  Union Selection { status=1 } { Projection { car_id, status } { Projection { car_id } { Car } Join Car }  } ))) ;
+ 
+qry: (Projection { location_id, longitude } { Projection { location_id } { Location } Join Location }  Difference ((Selection { longitude>=113.7167 } { Projection { location_id, longitude } { Projection { location_id } { Location } Join Location }  }  Intersection Selection { longitude<=114.6333 } { Projection { location_id, longitude } { Projection { location_id } { Location } Join Location }  } ))) ;
+qry: (Projection { location_id, latitude } { Projection { location_id } { Location } Join Location }  Difference ((Selection { latitude>22.4000 } { Projection { location_id, latitude } { Projection { location_id } { Location } Join Location }  }  Intersection Selection { latitude<22.8667 } { Projection { location_id, latitude } { Projection { location_id } { Location } Join Location }  } ))) ;
+ 
+
+SpecRewrite Iteration: 1
+Database shenzhen:
+qry : Selection { speed<0 and speed>120 } { Projection { car_id,speed } { Car }  } ;
+qry : (Projection { car_id,direction } { Car }  Difference Selection { direction>=0 and direction<=360 } { Projection { car_id,direction } { Car }  } );
+qry : (Projection { car_id,status } { Car }  Difference Selection { status=0 or status=1 } { Projection { car_id,status } { Car }  } );
+qry : (Projection { car_id,status } { Car }  Difference Selection { status=0 and status<>1 or status<>0 and status=1 } { Projection { car_id,status } { Car }  } );
+qry : (Projection { car_id,speed } { Car }  Difference (Selection { speed<=120 } { Projection { car_id,speed } { Car }  }  Union Selection { status=1 } { Projection { car_id,status } { Car }  } ));
+qry : (Projection { location_id,longitude } { Location }  Difference Selection { longitude>=113.7167 and longitude<=114.6333 } { Projection { location_id,longitude } { Location }  } );
+qry : (Projection { location_id,latitude } { Location }  Difference Selection { latitude>22.4000 and latitude<22.8667 } { Projection { location_id,latitude } { Location }  } );
+
+GenRewrite Iteration: 1
+Database shenzhen:
+qry : Projection { car_id,speed } { Selection { speed<0 and speed>120 } { Car }  } ;
+qry : (Projection { car_id,direction } { Car }  Difference Projection { car_id,direction } { Selection { direction>=0 and direction<=360 } { Car }  } );
+qry : (Projection { car_id,status } { Car }  Difference Projection { car_id,status } { Selection { status=0 or status=1 } { Car }  } );
+qry : (Projection { car_id,status } { Car }  Difference Projection { car_id,status } { Selection { status=0 and status<>1 or status<>0 and status=1 } { Car }  } );
+qry : (Projection { car_id,speed } { Car }  Difference (Projection { car_id,speed } { Selection { speed<=120 } { Car }  }  Union Projection { car_id,status } { Selection { status=1 } { Car }  } ));
+qry : (Projection { location_id,longitude } { Location }  Difference Projection { location_id,longitude } { Selection { longitude>=113.7167 and longitude<=114.6333 } { Location }  } );
+qry : (Projection { location_id,latitude } { Location }  Difference Projection { location_id,latitude } { Selection { latitude>22.4000 and latitude<22.8667 } { Location }  } );
+
+SpecRewrite Iteration: 2
+Database shenzhen:
+qry : Projection { car_id,speed } { Selection { speed<0 and speed>120 } { Car }  } ;
+qry : (Projection { car_id,direction } { Car }  Difference Projection { car_id,direction } { Selection { direction>=0 and direction<=360 } { Car }  } );
+qry : (Projection { car_id,status } { Car }  Difference Projection { car_id,status } { Selection { status=0 or status=1 } { Car }  } );
+qry : (Projection { car_id,status } { Car }  Difference Projection { car_id,status } { Selection { status=0 and status<>1 or status<>0 and status=1 } { Car }  } );
+qry : (Projection { car_id,speed } { Car }  Difference (Projection { car_id,speed } { Selection { speed<=120 } { Car }  }  Union Projection { car_id,status } { Selection { status=1 } { Car }  } ));
+qry : (Projection { location_id,longitude } { Location }  Difference Projection { location_id,longitude } { Selection { longitude>=113.7167 and longitude<=114.6333 } { Location }  } );
+qry : (Projection { location_id,latitude } { Location }  Difference Projection { location_id,latitude } { Selection { latitude>22.4000 and latitude<22.8667 } { Location }  } );
+
+GenRewrite Iteration: 2
+Database shenzhen:
+qry : Projection { car_id,speed } { Selection { speed<0 and speed>120 } { Car }  } ;
+qry : (Projection { car_id,direction } { Car }  Difference Projection { car_id,direction } { Selection { direction>=0 and direction<=360 } { Car }  } );
+qry : (Projection { car_id,status } { Car }  Difference Projection { car_id,status } { Selection { status=0 or status=1 } { Car }  } );
+qry : (Projection { car_id,status } { Car }  Difference Projection { car_id,status } { Selection { status=0 and status<>1 or status<>0 and status=1 } { Car }  } );
+qry : (Projection { car_id,speed } { Car }  Difference (Projection { car_id,speed } { Selection { speed<=120 } { Car }  }  Union Projection { car_id,status } { Selection { status=1 } { Car }  } ));
+qry : (Projection { location_id,longitude } { Location }  Difference Projection { location_id,longitude } { Selection { longitude>=113.7167 and longitude<=114.6333 } { Location }  } );
+qry : (Projection { location_id,latitude } { Location }  Difference Projection { location_id,latitude } { Selection { latitude>22.4000 and latitude<22.8667 } { Location }  } );
+
+USE shenzhen;
+SELECT car_id,speed FROM Car WHERE speed<0 AND speed>120;
+(SELECT car_id,direction FROM Car)  EXCEPT  (SELECT car_id,direction FROM Car WHERE direction>=0 AND direction<=360);
+(SELECT car_id,status FROM Car)  EXCEPT  (SELECT car_id,status FROM Car WHERE status=0 OR status=1);
+(SELECT car_id,status FROM Car)  EXCEPT  (SELECT car_id,status FROM Car WHERE status=0 AND status<>1 OR status<>0 AND status=1);
+(SELECT car_id FROM ( SELECT car_id,speed FROM Car ) AS sq1)  EXCEPT  ((SELECT car_id FROM ( SELECT car_id,speed FROM Car WHERE speed<=120 ) AS sq4)  UNION  (SELECT car_id FROM ( SELECT car_id,status FROM Car WHERE status=1 ) AS sq7));
+(SELECT location_id,longitude FROM Location)  EXCEPT  (SELECT location_id,longitude FROM Location WHERE longitude>=113.7167 AND longitude<=114.6333);
+(SELECT location_id,latitude FROM Location)  EXCEPT  (SELECT location_id,latitude FROM Location WHERE latitude>22.4000 AND latitude<22.8667);
