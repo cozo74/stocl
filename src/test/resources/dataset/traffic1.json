@@ -1,0 +1,738 @@
+{
+  "model_name": "traffic",
+  "class_diagram": {
+    "classes": [
+      {
+        "name": "Truck",
+        "attributes": [
+          {
+            "attr": "plate",
+            "type": "String"
+          },
+          {
+            "attr": "type",
+            "type": "Integer"
+          },
+          {
+            "attr": "weight",
+            "type": "Real"
+          },
+          {
+            "attr": "payloadCapacity",
+            "type": "Real"
+          }
+        ]
+      },
+      {
+        "name": "OBU",
+        "attributes": [
+          {
+            "attr": "batteryLevel",
+            "type": "Integer"
+          }
+        ]
+      },
+      {
+        "name": "PassRecord",
+        "attributes": [
+          {
+            "attr": "plate",
+            "type": "String"
+          },
+          {
+            "attr": "passWeight",
+            "type": "Real"
+          },
+          {
+            "attr": "speed",
+            "type": "Real"
+          }
+        ]
+      },
+      {
+        "name": "Trip",
+        "attributes": [
+          {
+            "attr": "entranceWeight",
+            "type": "Real"
+          },
+          {
+            "attr": "totalToll",
+            "type": "Real"
+          },
+          {
+            "attr": "status",
+            "type": "Integer"
+          }
+        ]
+      },
+      {
+        "name": "Road",
+        "attributes": [
+          {
+            "attr": "maxSpeedLimit",
+            "type": "Integer"
+          },
+          {
+            "attr": "minSpeedLimit",
+            "type": "Integer"
+          }
+        ]
+      },
+      {
+        "name": "RoadSideDevice",
+        "attributes": [
+          {
+            "attr": "name",
+            "type": "String"
+          },
+          {
+            "attr": "type",
+            "type": "String"
+          },
+          {
+            "attr": "toll",
+            "type": "Real"
+          },
+          {
+            "attr": "isClosed",
+            "type": "Boolean"
+          }
+        ]
+      }
+    ],
+    "associations": [
+      {
+        "name": "EquippedWith",
+        "startClass": "Truck",
+        "endClass": "OBU",
+        "role": "equipped",
+        "multi": "1",
+        "r_role": "assignedTo",
+        "r_multi": "1"
+      },
+      {
+        "name": "HasRecords",
+        "startClass": "OBU",
+        "endClass": "PassRecord",
+        "role": "records",
+        "multi": "n",
+        "r_role": "belongsTo",
+        "r_multi": "1"
+      },
+      {
+        "name": "TripContains",
+        "startClass": "Trip",
+        "endClass": "PassRecord",
+        "role": "contains",
+        "multi": "n",
+        "r_role": "containedBy",
+        "r_multi": "1"
+      },
+      {
+        "name": "Generates",
+        "startClass": "RoadSideDevice",
+        "endClass": "PassRecord",
+        "role": "generated",
+        "multi": "n",
+        "r_role": "createdBy",
+        "r_multi": "1"
+      },
+      {
+        "name": "HasDevices",
+        "startClass": "Road",
+        "endClass": "RoadSideDevice",
+        "role": "devices",
+        "multi": "n",
+        "r_role": "installedOn",
+        "r_multi": "1"
+      }
+    ]
+  },
+  "object_diagram": {
+    "objects": [
+      {
+        "type": "Truck",
+        "values": [
+          {
+            "id" : 1,
+            "plate": "01",
+            "type": 4,
+            "weight": 1000.0,
+            "payloadCapacity": 1000.0
+          },
+          {
+            "id" : 2,
+            "plate": "02",
+            "type": 5,
+            "weight": 2000.0,
+            "payloadCapacity": 2000.0
+          },
+          {
+            "id" : 3,
+            "plate": "03",
+            "type": 6,
+            "weight": 3000.0,
+            "payloadCapacity": 3000.0
+          }
+        ]
+      },
+      {
+        "type": "OBU",
+        "values": [
+          {
+            "id" : 1,
+            "batteryLevel": 56
+          },
+          {
+            "id" : 2,
+            "batteryLevel": 88
+          },
+          {
+            "id" : 3,
+            "batteryLevel": 23
+          }
+        ]
+      },
+      {
+        "type": "Road",
+        "values": [
+          {
+            "id" : 1,
+            "maxSpeedLimit": 120,
+            "minSpeedLimit": 60
+          },
+          {
+            "id" : 2,
+            "maxSpeedLimit": 100,
+            "minSpeedLimit": 60
+          },
+          {
+            "id" : 3,
+            "maxSpeedLimit": 80,
+            "minSpeedLimit": 40
+          }
+        ]
+      },
+      {
+        "type": "RoadSideDevice",
+        "values": [
+          {
+            "id" : 1,
+            "name": "Road_1 Entry",
+            "type": "Entry",
+            "toll": 0.0,
+            "isClosed": false
+          },
+          {
+            "id" : 2,
+            "name": "Road_1 Gantry_1",
+            "type": "Gantry",
+            "toll": 10.5,
+            "isClosed": false
+          },
+          {
+            "id" : 3,
+            "name": "Road_1 Gantry_2",
+            "type": "Gantry",
+            "toll": 15.5,
+            "isClosed": false
+          },
+          {
+            "id" : 4,
+            "name": "Road_1 Exit",
+            "type": "Exit",
+            "toll": 12.0,
+            "isClosed": false
+          },
+          {
+            "id" : 5,
+            "name": "Road_2 Entry",
+            "type": "Entry",
+            "toll": 0.0,
+            "isClosed": false
+          },
+          {
+            "id" : 6,
+            "name": "Road_2 Gantry_1",
+            "type": "Gantry",
+            "toll": 8.5,
+            "isClosed": false
+          },
+          {
+            "id" : 7,
+            "name": "Road_2 Exit",
+            "type": "Exit",
+            "toll": 15.0,
+            "isClosed": false
+          },
+          {
+            "id" : 8,
+            "name": "Road_3 Entry",
+            "type": "Entry",
+            "toll": 0.0,
+            "isClosed": false
+          },
+          {
+            "id" : 9,
+            "name": "Road_3 Gantry_1",
+            "type": "Gantry",
+            "toll": 15.5,
+            "isClosed": false
+          },
+          {
+            "id" : 10,
+            "name": "Road_3 Gantry_2",
+            "type": "Gantry",
+            "toll": 25.5,
+            "isClosed": false
+          },
+          {
+            "id" : 11,
+            "name": "Road_3 Exit",
+            "type": "Exit",
+            "toll": 8.5,
+            "isClosed": false
+          }
+        ]
+      },
+      {
+        "type": "PassRecord",
+        "values": [
+          {
+            "id" : 1,
+            "plate": "01",
+            "passWeight": 1533.2,
+            "speed": 23.3
+          },
+          {
+            "id" : 2,
+            "plate": "01",
+            "passWeight": 1533.2,
+            "speed": 88.1
+          },
+          {
+            "id" : 3,
+            "plate": "01",
+            "passWeight": 1533.2,
+            "speed": 100.0
+          },
+          {
+            "id" : 4,
+            "plate": "01",
+            "passWeight": 1533.2,
+            "speed": 66.7
+          },
+          {
+            "id" : 5,
+            "plate": "02",
+            "passWeight": 3334.0,
+            "speed": 17.5
+          },
+          {
+            "id" : 6,
+            "plate": "02",
+            "passWeight": 3334.0,
+            "speed": 86.1
+          },
+          {
+            "id" : 7,
+            "plate": "02",
+            "passWeight": 3334.0,
+            "speed": 37.6
+          },
+          {
+            "id" : 8,
+            "plate": "03",
+            "passWeight": 4718.5,
+            "speed": 22.5
+          },
+          {
+            "id" : 9,
+            "plate": "03",
+            "passWeight": 4718.5,
+            "speed": 77.1
+          },
+          {
+            "id" : 10,
+            "plate": "03",
+            "passWeight": 5718.5,
+            "speed": 79.6
+          },
+          {
+            "id" : 11,
+            "plate": "03",
+            "passWeight": 5718.5,
+            "speed": 33.3
+          }
+        ]
+      },
+      {
+        "type": "Trip",
+        "values": [
+          {
+            "id" : 1,
+            "totalToll": 38.0,
+            "status": 1,
+            "entranceWeight": 1533.2
+          },
+          {
+            "id" : 2,
+            "totalToll": 23.5,
+            "status": 1,
+            "entranceWeight": 3334.0
+          },
+          {
+            "id" : 3,
+            "totalToll": 49.5,
+            "status": 1,
+            "entranceWeight": 4718.5
+          }
+        ]
+      }
+    ],
+    "links" : [
+      {
+        "type": "EquippedWith",
+        "values": [
+          {
+            "sid" : 1,
+            "eid" : 1
+          },
+          {
+            "sid" : 2,
+            "eid" : 2
+          },
+          {
+            "sid" : 3,
+            "eid" : 3
+          }
+        ]
+      },
+      {
+        "type": "HasDevices",
+        "values": [
+          {
+            "sid" : 1,
+            "eid" : 1
+          },
+          {
+            "sid" : 1,
+            "eid" : 2
+          },
+          {
+            "sid" : 1,
+            "eid" : 3
+          },
+          {
+            "sid" : 1,
+            "eid" : 4
+          },
+          {
+            "sid" : 2,
+            "eid" : 5
+          },
+          {
+            "sid" : 2,
+            "eid" : 6
+          },
+          {
+            "sid" : 2,
+            "eid" : 7
+          },
+          {
+            "sid" : 3,
+            "eid" : 8
+          },
+          {
+            "sid" : 3,
+            "eid" : 9
+          },
+          {
+            "sid" : 3,
+            "eid" : 10
+          },
+          {
+            "sid" : 3,
+            "eid" : 11
+          }
+        ]
+      },
+      {
+        "type": "HasRecords",
+        "values": [
+          {
+            "sid" : 1,
+            "eid" : 1
+          },
+          {
+            "sid" : 1,
+            "eid" : 2
+          },
+          {
+            "sid" : 1,
+            "eid" : 3
+          },
+          {
+            "sid" : 1,
+            "eid" : 4
+          },
+          {
+            "sid" : 2,
+            "eid" : 5
+          },
+          {
+            "sid" : 2,
+            "eid" : 6
+          },
+          {
+            "sid" : 2,
+            "eid" : 7
+          },
+          {
+            "sid" : 3,
+            "eid" : 8
+          },
+          {
+            "sid" : 3,
+            "eid" : 9
+          },
+          {
+            "sid" : 3,
+            "eid" : 10
+          },
+          {
+            "sid" : 3,
+            "eid" : 11
+          }
+        ]
+      },
+      {
+        "type": "TripContains",
+        "values": [
+          {
+            "sid" : 1,
+            "eid" : 1
+          },
+          {
+            "sid" : 1,
+            "eid" : 2
+          },
+          {
+            "sid" : 1,
+            "eid" : 3
+          },
+          {
+            "sid" : 1,
+            "eid" : 4
+          },
+          {
+            "sid" : 2,
+            "eid" : 5
+          },
+          {
+            "sid" : 2,
+            "eid" : 6
+          },
+          {
+            "sid" : 2,
+            "eid" : 7
+          },
+          {
+            "sid" : 3,
+            "eid" : 8
+          },
+          {
+            "sid" : 3,
+            "eid" : 9
+          },
+          {
+            "sid" : 3,
+            "eid" : 10
+          },
+          {
+            "sid" : 3,
+            "eid" : 11
+          }
+        ]
+      },
+      {
+        "type": "Generates",
+        "values": [
+          {
+            "sid" : 1,
+            "eid" : 1
+          },
+          {
+            "sid" : 2,
+            "eid" : 2
+          },
+          {
+            "sid" : 3,
+            "eid" : 3
+          },
+          {
+            "sid" : 4,
+            "eid" : 4
+          },
+          {
+            "sid" : 5,
+            "eid" : 5
+          },
+          {
+            "sid" : 6,
+            "eid" : 6
+          },
+          {
+            "sid" : 7,
+            "eid" : 7
+          },
+          {
+            "sid" : 8,
+            "eid" : 8
+          },
+          {
+            "sid" : 9,
+            "eid" : 9
+          },
+          {
+            "sid" : 10,
+            "eid" : 10
+          },
+          {
+            "sid" : 11,
+            "eid" : 11
+          }
+        ]
+      }
+    ]
+  },
+  "Invariants" : [
+    {
+      "context" : "Truck",
+      "invs" : [
+        {
+          "name" : "TypeCheck",
+          "expr" : "self.type >= 4 and self.type <=6",
+          "satisfied" : true,
+          "violated" : []
+        },
+        {
+          "name" : "ValidWeight",
+          "expr" : "self.weight > 0",
+          "satisfied" : true,
+          "violated" : []
+        },
+        {
+          "name" : "ValidPayloadCapacity",
+          "expr" : "self.payloadCapacity > 0",
+          "satisfied" : true,
+          "violated" : []
+        }
+      ]
+    },
+    {
+      "context" : "OBU",
+      "invs" : [
+        {
+          "name" : "BatteryLevel",
+          "expr" : "self.batteryLevel >= 5",
+          "satisfied" : true,
+          "violated" : []
+        }
+      ]
+    },
+    {
+      "context" : "PassRecord",
+      "invs" : [
+        {
+          "name" : "TruckCheck",
+          "expr" : "self.plate = self.belongsTo.assignedTo.plate",
+          "satisfied" : true,
+          "violated" : []
+        },
+        {
+          "name" : "WeightChange",
+          "expr" : "self.passWeight = self.containedBy.entranceWeight",
+          "satisfied" : false,
+          "violated" : [10,11]
+        },
+        {
+          "name" : "OverSpeed",
+          "expr" : "self.speed <= self.createdBy.installedOn.maxSpeedLimit",
+          "satisfied" : true,
+          "violated" : []
+        }
+      ]
+    },
+    {
+      "context" : "Trip",
+      "invs" : [
+        {
+          "name" : "OverLoad",
+          "expr" : "self.contains->forAll(r | r.passWeight <= r.belongsTo.assignedTo.weight + r.belongsTo.assignedTo.payloadCapacity) ",
+          "satisfied" : true,
+          "violated" : []
+        },
+        {
+          "name" : "WeightChange",
+          "expr" : "self.contains->forAll(r | r.passWeight = self.entranceWeight)",
+          "satisfied" : false,
+          "violated" : [3]
+        },
+        {
+          "name" : "TollCheck",
+          "expr" : "self.status = 1 implies self.totalToll = self.contains->collect(createdBy)->collect(toll)->sum()",
+          "satisfied" : true,
+          "violated" : []
+        },
+        {
+          "name" : "StatusCheck",
+          "expr" : "self.status = 1 or self.status = 0 or self.status = -1",
+          "satisfied" : true,
+          "violated" : []
+        },
+        {
+          "name" : "HasEntryAndExit",
+          "expr" : "self.contains->collect(createdBy)->collect(type)->includes('Entry') and self.contains->collect(createdBy)->collect(type)->includes('Exit')",
+          "satisfied" : true,
+          "violated" : []
+        },
+        {
+          "name" : "EntryAndExitDiff",
+          "expr" : "self.contains->collect(createdBy)->select(d | d.type='Entry' or d.type='Exit')->isUnique(type)",
+          "satisfied" : true,
+          "violated" : []
+        }
+      ]
+    },
+    {
+      "context" : "RoadSideDevice",
+      "invs" : [
+        {
+          "name" : "StatusCheck",
+          "expr" : "self.isClosed implies self.generated->isEmpty()",
+          "satisfied" : true,
+          "violated" : []
+        },
+        {
+          "name" : "TypeCheck",
+          "expr" : "self.type = 'Entry' or self.type = 'Gantry' or self.type = 'Exit'",
+          "satisfied" : true,
+          "violated" : []
+        }
+      ]
+    },
+    {
+      "context" : "Road",
+      "invs" : [
+        {
+          "name" : "SpeedLimit",
+          "expr" : "self.minSpeedLimit < self.maxSpeedLimit",
+          "satisfied" : true,
+          "violated" : []
+        }
+      ]
+    }
+  ]
+}

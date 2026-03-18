@@ -1,14 +1,17 @@
 package nju.ics.model.uml;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class UMLAssoClass {
-    String assoClassName, startClass, endClass, role, r_role, multi, r_multi ;
+    private String assoClassName, startClass, endClass, role, r_role, multi, r_multi ;
     boolean hasAttrs = false;
-    Map<String, String> attrList = new HashMap<>();
+    List<String> attrList = new ArrayList<>();
+    Map<String, String> attrMap = new HashMap<>();
 
     public UMLAssoClass(String assoClassName, String startClass, String endClass, String role, String r_role, String multi, String r_multi) {
         this.assoClassName = assoClassName;
@@ -20,7 +23,7 @@ public class UMLAssoClass {
         this.r_multi = r_multi;
     }
 
-    public UMLAssoClass(String assoClassName, String startClass, String endClass, String role, String r_role, String multi, String r_multi, boolean hasAttrs, Map<String, String> attrList) {
+    public UMLAssoClass(String assoClassName, String startClass, String endClass, String role, String r_role, String multi, String r_multi, boolean hasAttrs, List<String> attrList, Map<String, String> attrMap) {
         this.assoClassName = assoClassName;
         this.startClass = startClass;
         this.endClass = endClass;
@@ -30,7 +33,31 @@ public class UMLAssoClass {
         this.r_multi = r_multi;
         this.hasAttrs = hasAttrs;
         this.attrList = attrList;
+        this.attrMap = attrMap;
     }
+
+
+    public boolean isSingleRole(String role) {
+
+        if (!role.equals(this.role) && !role.equals(this.r_role)) {
+            throw new RuntimeException(role + " is not a valid role in association class " + assoClassName);
+        }
+
+        if (role.equals(this.role)) {
+            return "1".equals(multi);
+        } else {
+            return "1".equals(r_multi);
+        }
+
+
+    }
+
+
+
+
+
+
+
 
     public String getAssoClassName() {
         return assoClassName;
@@ -96,12 +123,18 @@ public class UMLAssoClass {
         this.hasAttrs = hasAttrs;
     }
 
-    public Map<String, String> getAttrList() {
+    public List<String> getAttrList() {
         return attrList;
     }
 
-    public void setAttrList(Map<String, String> attrList) {
-        this.attrList = attrList;
+
+
+    public Map<String, String> getAttrMap() {
+        return attrMap;
+    }
+
+    public void setAttrMap(Map<String, String> attrMap) {
+        this.attrMap = attrMap;
     }
 
     @Override

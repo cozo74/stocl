@@ -1,0 +1,304 @@
+inv: (time.getCurrentHour() > 8) and (time.getCurrentHour() < 17)
+inv: self.ctxt.principal.identity.name = self.owner
+inv: self.numberOfEmployees > 50
+inv: self.numberOfEmployees > 50
+inv: let sum_income : Integer = self.Job.salary->sum() in if isUnemployed then    sum_income < 100 else sum_income >= 100  endif
+inv: self.age > 0
+inv: self.stockPrice() > 0
+inv: self.manager.isUnemployed = false
+inv: self.employee->notEmpty()
+inv: self.employer->size() < 3
+inv: self.employer->isEmpty()
+inv: self.manager->size() = 1
+inv: self.manager.age > 40
+inv:  self.wife->notEmpty() implies self.wife.gender = Gender::female
+inv: self.wife->notEmpty() implies self.wife.age >= 18 and self.husband->notEmpty() implies self.husband.age >= 18
+inv: self.employee->size() <= 50
+inv: self.Job->size() <= 2
+inv: self.employeeRanking[bosses].score->sum() > 0
+inv: self.employeeRanking[employees].score->sum() > 0
+inv: self.employer.numberOfEmployees >= 1
+inv: self.employee.age > 21
+inv:  not self.customer->exists(underAge = true)
+inv: self.customer[8764423]->forAll(underAge = false)
+inv: self.allInstances()->forAll(p1:Person, p2:Person |                                  p1 <> p2 implies                                   p1.lastName <> p2.lastName)
+inv: statistics->sortedBy(totalSalary)->    last().wellpaidEmployees->includes(self)
+inv:  self.employee->select(e:Person | e.age > 50)->notEmpty()
+inv:  self.employee->select(e:Person | e.age > 50)->notEmpty()
+inv:  self.employee->select(p: Person | p.age > 50)->notEmpty()
+inv:  self.employee->select(p : Person | p.age > 50)->notEmpty()
+inv:  self.employee->reject( p:Person | p.isMarried )->isEmpty()
+inv: self.employee->collect(p:Person | p.birthDate)->size() > 0
+inv: self.employee.birthDate->size() > 0
+inv:     self.employee->forAll(p:Person | p.age <= 65 )
+inv:     self.employee->forAll( p:Person | p.age <= 65 )
+inv:     self.employee->forAll( p : Person | p.age <= 65 )
+inv:  self.employee->forAll( e1 :Person , e2 : Person |                  e1 <> e2 implies e1.firstName <> e2.firstName)
+inv:  self.employee->forAll(e1 :Person | self.employee->forAll (e2:Person |                    e1 <> e2 implies e1.firstName <> e2.firstName))
+inv:  self.employee->exists( p:Person | p.firstName = 'Jack' )
+inv:  self.employee->exists( p :Person | p.firstName = 'Jack' )
+inv:  self.employee->exists( p : Person | p.firstName = 'Jack' )
+inv: employer->forAll( e:Company | e.employee->exists( p:Person|p.lastName = e.name) )
+inv: employer->forAll( c:Company | c.employee->exists( p : Person | p.lastName = c.name) )
+inv: self.ctxt.principal.identity.name = self.selectedEntry.owner
+inv: self.i > 5
+inv: not self.oclAsType(digraph.Node).left.oclIsUndefined()           implies  not (self.oclAsType(digraph.Node).left.oclAsType(digraph.Cnode).color = self.color)      and      not self.oclAsType(digraph.Node).right.oclIsUndefined()           implies  not (self.oclAsType(digraph.Node).right.oclAsType(digraph.Cnode).color = self.color)
+inv customer_must_have_account:   (self.accounts->size() > 0)
+inv gender_impl_title: (gender implies (self.title = 'Mr.'))          and self.accounts->select(a:Account| a.oclIsTypeOf(eBank.CreditAccount))             ->collect(ca:Account| ca.getBalance())             ->sum() > -100000
+inv:  owner.accounts->includes(self)
+inv:  amount >= 0
+inv:  BankAccount.allInstances->forAll(a1,a2 | a1<>a2 implies                                  a1.accountNumber <> a2.accountNumber)
+inv:  currency <> tradingCurrency
+inv:  creditLimit <= 0         and balance >= creditLimit         and self.book->size() < 21
+inv:  self.checks->size() > 19         and self.checks->size() < 51
+inv:  self.checkbook->size() = 0         or self.checkbook->size() = 1
+inv AmountNotTooLarge: self.amount < 1000
+inv isNat: self.stock >= 0
+inv idUnique: Product::allInstances()                       ->forAll(p1:Product, p2:Product | p1.id <> p2.id)
+inv isNat: self.quantity >= 0
+inv stateRange:    (self.state = 'pending')                      or (self.state = 'invoiced')
+inv idUnique: Order::allInstances()                       ->forAll(o1:Order, o2:Order | o1.id <> o2.id)
+inv isStatic: self.allInstances()->size() = 1
+inv isInWarehouse :           not self.warehouse.oclIsUndefined()
+inv isInWarehouse: not self.warehouse.oclIsUndefined()
+inv : self.oclAsType(ISP.Service).freedownload = 1024
+inv onlyOfferedService: self.services->includesAll(self.customer                              ->collect(c:Customer | c.service)->asSet())
+inv: self.surfRecord.downloadRate <= self.service.freedownload       implies self.amount = self.service.price
+inv: self.bill.send_date.durationInDays(self.bill.paid_date.today()) > 30         and        self.bill.send_date.durationInDays(self.bill.paid_date) > 30        implies not self.active
+inv: self.allInstances()->forAll(       c1:Customer, c2:Customer | c1.id = c2.id implies c1 =c2)
+inv not_exploited: salary >= 2000
+inv slavery: employs->exists( e:Employee | e.salary < 2000)
+inv atLeastOneEmployee: self.allInstances()->notEmpty()
+inv: true
+inv sizeDefined: data.oclIsDefined()
+inv isPositive: priority > 0
+inv monotonicity: next.oclIsDefined() implies priority < next.priority
+inv: true
+inv wff:    not left.oclIsInvalid() and not right.oclIsInvalid()
+inv redinv: color implies                   ((left = null or not left.color)                    and (right = null or not right.color))
+inv ordinv: (left = null or left.max() < key)
+inv balinv: black_depth(left) = black_depth(right)
+inv: self.oclIsKindOf(RoyalLoyal.Transaction) = true
+inv: self.oclIsTypeOf(RoyalLoyal.Transaction) = false
+inv: self.oclIsTypeOf(RoyalLoyal.Burning) = true
+inv: self.oclIsKindOf(RoyalLoyal.Burning) = true
+inv: self.oclIsTypeOf(RoyalLoyal.Earning) = false
+inv: self.oclIsKindOf(RoyalLoyal.Earning) = false
+inv checkDates: validFrom.isBefore(validThru)
+inv ofAge: owner.age >= 18
+inv THIS: let correctDate : Boolean =    self.validFrom.isBefore(Date::now) and    self.validThru.isAfter(Date::now)   in    if valid then   correctDate = false   else    correctDate = true    endif
+inv: validThru.isAfter( Date::now )
+inv: self.owner.dateOfBirth.isBefore( Date::now )
+inv: self.owner.programs->size() > 0
+inv: self.transactions->select( t: Transaction| t.points > 100 )                           ->notEmpty()
+inv:  not programs->isEmpty()
+inv:   self.age_m() > 21 and self.age_m() < 65
+inv:   self.age_m() <= 12 xor cards->size() > 3
+inv:   title = 'Mr.' or title = 'Ms.'
+inv ofAge: age >= 18
+inv:  programs->size() = cards->select(c:CustomerCard|c.valid = true )                              ->size()
+inv: cards->select( c: CustomerCard| c.valid = true )->size() > 1
+inv: name = 'Mona'
+inv: self.name = 'Mona'
+inv: self.name = 'Mona'
+inv: self.title = 'Ms.'
+inv: self.name = 'Mona' and self.title = 'Ms.'
+inv myInvariant: self.name = 'Mona'
+inv: Membership.account->select(a:LoyaltyAccount| a.points > 0 )          ->isEmpty()
+inv: Membership.account->reject( not (points > 0) )->isEmpty()
+inv ANY: self.Membership.account->any( number < 10000 )->isEmpty()
+inv: self.programs->collect(lp: LoyaltyProgram | lp.partners)                    ->collectNested(deliveredServices )->isEmpty()
+inv:  Set{1,2,3}->iterate( i: Integer; sum: Integer = 0 | sum + i ) = 0
+inv: programs->size() = cards->select( c: CustomerCard| c.valid = true )      	 		     ->size()
+inv oneOwner: transactions.card.owner->asSet()->size() = 1
+inv: transactions->size() = 1
+inv Points: points > 0                 implies                 transactions->exists(t:Transaction | t.points > 0)
+inv Transactions: transactions.points->exists(p : Integer |                                                  p = 500 )
+inv knownServiceLevel: levels->includesAll(Membership.currentLevel)
+inv minServices: partners.deliveredServices ->size() >= 1
+inv noAccounts: partners.deliveredServices->forAll(  			  pointsEarned = 0 and pointsBurned = 0 )  				  implies Membership.account->isEmpty()
+inv : levels->first() = levels->first()
+inv firstLevel: levels->first().name = 'Silver'
+inv: partners.deliveredServices->forAll(s:Service|                                            s.pointsEarned = 0)  	   and  	   Membership.card->forAll(c:CustomerCard|  			c.validThru = Date::fromYMD(2000,1,1))  	   and  	   participants->forAll(c:Customer| c.age_m() > 55)
+inv: partners.deliveredServices->forAll(s: Service|                                     s.pointsEarned = 0)
+inv: participants->forAll(p:Customer | p.age_m() > 55)
+inv: levels->includesAll( Membership.currentLevel )
+inv: self.levels->exists(sl:ServiceLevel| sl.name = 'basic')
+inv testSET:  Set { 1 , 2 , 5 , 88 } ->isEmpty()
+inv:  Set { 'apple' , 'orange', 'strawberry' } ->isEmpty()
+inv:  Sequence { 1, 3, 45, 2, 3 } ->isEmpty()
+inv:  Sequence { 'ape', 'nut' } ->isEmpty()
+inv:  Bag {1 , 3 , 4, 3, 5 } ->isEmpty()
+inv:  Sequence{ 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 } ->isEmpty()
+inv:  Sequence{ 1..(6 + 4) } ->isEmpty()
+inv:  Sequence{ 1..10 } ->isEmpty()
+inv: self.participants->size() < 10000
+inv: self.Membership.account               ->isUnique( acc: LoyaltyAccount | acc.number )
+inv: participants->forAll( c:Customer | c.age_m() <= 70 )
+inv: self.participants->forAll(c1 : Customer, c2:Customer |         c1 <> c2 implies c1.name <> c2.name)
+inv: self.participants->forAll( c1 : Customer|         self.participants->forAll( c2 : Customer |           c1 <> c2 implies c1.name <> c2.name ))
+inv: self.Membership.account->one( number < 10000 )
+inv correctCard: participants.cards->includes(self.card)
+inv levelAndColor:   currentLevel.name = 'Silver' implies card.color = Color::silver  and   currentLevel.name = 'Gold' implies card.color = Color::gold
+inv noEarnings: programs.partners.deliveredServices                ->forAll(pointsEarned = 0) implies account                            ->isEmpty()
+inv noEarnings2: programs.isSaving       implies account->isEmpty()
+inv: account.points >= 0 or account->isEmpty()
+inv: participants.cards.Membership->includes( self )
+inv: programs.levels->includes( currentLevel )
+inv: account->isEmpty()
+inv: programs.levels ->includes(currentLevel)
+inv nrOfParticipants: numberOfCustomers = programs.participants->size()
+inv:  numberOfCustomers = programs->collect(p:LoyaltyProgram| p.participants)                            ->size()
+inv nrOfParticipants2:    numberOfCustomers = programs.participants->asSet()->size()
+inv totalPoints:     deliveredServices.transactions.points->sum() < 10000
+inv:  deliveredServices->collect(s:Service| s.transactions)                ->select(t:Transaction|t.oclIsTypeOf(RoyalLoyal.Earning))       		       ->collect(t:Transaction|t.points)->size()>0
+inv totalPointsEarning2:      deliveredServices.transactions     ->select(t:Transaction|t.oclIsTypeOf(RoyalLoyal.Earning) )     .points->sum()      < 10000
+inv: self.programs.partners->select(p : ProgramPartner | p <> self)              ->isEmpty()
+inv: program.partners ->isEmpty()
+inv: Set { Set { 1, 2 }, Set { 2, 3 }, Set { 14, 5, 6 } } ->isEmpty()
+inv: Set { 1, 2, 3, 4, 5, 6 } ->isEmpty()
+inv: Bag { Set { 1, 2 }, Set { 1, 2 }, Set { 4, 5, 6 } } ->isEmpty()
+inv:  Bag { 1, 1, 2, 2, 4, 5, 6 } ->isEmpty()
+inv: Sequence { Set { 1, 2 }, Set { 2, 3 }, Set { 4, 5, 6 } } ->isEmpty()
+inv: Sequence { 2, 1, 2, 3, 5, 6, 4 } ->isEmpty()
+inv: Set{1,4,7,10} - Set{4,7} = Set{1,10}
+inv: Set{1,4,7,10}->symmetricDifference(Set{4,5,7}) = Set{1,5,10}
+inv: Sequence{'a','b','c','c','d','e'}->first() = 'a'
+inv: Sequence{'a','b','c','c','d','e'}->at( 3 ) = 'c'
+inv: Sequence{'a','b','c','c','d','e'}->indexOf( 'c' ) = 3
+inv: Sequence{'a','b','c','c','d','e'}->subSequence( 3, 5 ) =  	Sequence{'c','c','d'}
+inv: Sequence{'a','b','c','c','d','e'}->append( 'X' ) =  			Sequence{'a','b','c','c','d','e','X'}
+inv: Sequence{'a','b','c','c','d','e'}->prepend( 'X' ) =  			Sequence{'X','a','b','c','c','d','e'}
+inv: OrderedSet{'a','b','c','d'}->last() = 'd'
+inv: OrderedSet{'a','b','c','d'}->insertAt( 3, 'X' ) =   					       OrderedSet{'a','b','X','c','d'}
+inv: OrderedSet{'a','b','c','d'}->subOrderedSet( 2, 3 ) =  			OrderedSet{'b','c'}
+inv: self.pointsEarned > 0 implies not (self.pointsBurned = 0)
+inv: not true
+inv:   description = 'Foobar'
+inv:   512 * 2 + 3 =  1027
+inv:   2654 * 4.3 + 101 = 11513.2
+inv:  2654 * 4.3e1 + 101 = 11513.2e1
+inv:   (3.2).floor() / 3 = 1
+inv:   (3.2e1).floor() / 3 = 1
+inv:   1.175 * (-8.9).abs() - 10 = 0.4575
+inv:   1.175e1 * (-8.9e1).abs() - 10 = 0.4575e1
+inv:   (12 > 22.7) = false
+inv:   12.max(33) = 33
+inv:   33.max(12) = 33
+inv:   13.mod(2)  = 1
+inv:   13.div(2)  = 6
+inv:   33.7.min(12) = 12.0
+inv:   -24.abs() = 24
+inv: (-2.4).floor() = -3
+inv:  (2.4).floor() = 2
+inv:   'Isabelle'.size() = 9
+inv:   ('Isabelle' = 'HOL-OCL') = false
+inv:   'Isabelle'.concat('/HOL-OCL') = 'Isabelle/HOL-OCL'
+inv:   'Isabelle/HOL-OCL'.toUpper() = 'ISABELLE/HOL-OCL'
+inv:   'Isabelle/HOL-OCL'.toLower() = 'isabelle/hol-ocl'
+inv:   'Isabelle/HOL-OCL'.substring(1, 13) = 'Isabelle/HOL'
+inv: self.oclIsKindOf(RoyalLoyal.Transaction) = true
+inv: self.oclIsTypeOf(RoyalLoyal.Transaction) = true
+inv: self.oclIsTypeOf(RoyalLoyal.Burning) = false
+inv: self.oclIsKindOf(RoyalLoyal.Burning) = false
+inv self_short: i = 5
+inv self_long:  self.i = 5
+inv: self.i=self.attribB.attribA.i
+inv: i = attribB.attribA.i
+inv iskind:  self.oclIsKindOf(simple.A)
+inv meth: self.m(1) > 5
+inv meth2: self.m(self.i) > 5
+inv real: r = 2.45
+inv: not Set{1,2,3,4,5} ->isEmpty()
+inv: Set{}->isEmpty()
+inv constant: self.j = 42
+inv iskind:  not self.oclIsKindOf(simple.A)
+inv istype:  self.oclIsTypeOf(simple.B)
+inv cast: self.oclAsType(simple.A).oclIsTypeOf(simple.A)
+inv named_self_short: i=5
+inv named_self_foo:  foo.i=5
+inv: self.i->size() > 0
+inv setshort: self.i->size() > 0
+inv set_long: self.i->asSet()->size() > 0
+inv intAsSet:    1->asSet()->includes(1)
+inv intInclude:  1->includes(1)
+inv intSizew:    1->size() > 0
+inv inc: self.i ->includes(4)
+inv forall:       self.a->forAll(a:A  | a.i = 5)
+inv twoforall:    self.a->forAll(a:A, b:A | a.i = b.i)
+inv existential:  self.a->exists(a:A | a.i = 5)
+inv collect_short: self.a.i = Set{5}
+inv collect_long:  self.a ->collect(i) = Set{5}
+inv collect_test:  self.a.i = 5
+inv collect_test2:  self.a->collect(i) = 5
+inv strange_collect: self.a->size() = 1 implies self.a.i=5
+inv: simple::A.i = 5
+inv: r     = 1.0
+inv: i + r = 10
+inv: i + r = 10.0
+inv: r     = 10.0
+inv: r     = 10
+inv: self.oclAsType(A).r = 0
+inv mt: self.a->isEmpty()
+inv full: self.a->notEmpty()
+inv un: self.a->union(self.a) = self.a
+inv inter: self.a->intersection(self.a) = self.a
+inv:  name <> ''
+inv onlyOneChair:          self.participants->one( p:Participant |                                         p.role.oclIsTypeOf(AbstractSimpleChair01.Chair))
+inv:  name <> ''
+inv onlyOneChair:          self.participants->one( p:Participant |                                         p.role.oclIsTypeOf(AbstractSimpleChair02.Chair))
+inv AssociationClassInjective:          Participant::allInstances()->forAll( p: Participant |            ( self.role = p.role and self.person = p.person )                implies self = p )
+inv oneRolePerParticipant:   role->size() = 1
+inv onePersonPerParticipant: person->size() = 1
+inv:  name <> ''
+inv onlyOneChair:          self.participants->one( p:Participant |                                         p.role.oclIsTypeOf(AbstractSimpleChair03.Chair))
+inv AssociationClassInjective:          Participant::allInstances()->forAll( p: Participant |            ( self.role = p.role and self.person = p.person )                implies self = p )
+inv oneRolePerParticipant:   role->size() = 1
+inv onePersonPerParticipant: person->size() = 1
+inv:  self.person.role = self.role
+inv:  self.role.person = self.person
+inv:  self.participant.role = self.role
+inv:  self.role.participant = self.participant
+inv:  self.participant.person = self.person
+inv:  self.person.participant = self.participant
+inv:  name <> ''
+inv onlyOneChair:          self.participants->one( p:Participant |                                         p.role.oclIsTypeOf(AbstractSimpleChair04.Chair))
+inv AssociationClassInjective:          Participant::allInstances()->forAll( p: Participant |            ( self.role = p.role and self.person = p.person )                implies self = p )
+inv oneRolePerParticipant:   role->size() = 1
+inv onePersonPerParticipant: person->size() = 1
+inv:  self.person->collect(p:Person | p.role)->includesAll(self.role)
+inv:  self.role->collect(r:Role | r.person)->includesAll(self.person)
+inv:  self.participant->collect(p:Participant | p.role)->includesAll(self.role)
+inv:  self.role->collect(r:Role | r.participant)->includesAll(self.participant)
+inv:  self.participant->collect(p:Participant | p.person)->includesAll(self.person)
+inv:  self.person->collect(p:Person | p.participant)->includesAll(self.participant)
+inv:  self.role->forAll(r:Role | r.person->includes(self))
+inv:  self.person->forAll(p:Person | p.role->includes(self))
+inv:  self.participant->forAll(p:Participant | p.person->includes(self))
+inv:  self.person->forAll(p:Person | p.participant->includes(self))
+inv:  self.role->forAll(r: Role | r.participant->includes(self))
+inv:  self.participant->forAll(p:Participant | p.role->includes(self))
+inv:  name <> ''
+inv onlyOneChair:          self.roles->one( r:Role| r.oclIsTypeOf(ConcreteSimpleChair01.Chair))
+inv: participants.size() = roles.size()
+inv:  name <> ''
+inv onlyOneChair:          self.roles->one( r:Role| r.oclIsTypeOf(ConcreteSimpleChair02.Chair))
+inv: participants.size() = roles.size()
+inv:  self.roles->forAll(r:Role | r.sessions->includes(self))
+inv:  self.sessions->forAll(s:Session | s.roles->includes(self))
+inv:  self.participants->forAll(p:Person | p.sessions->includes(self))
+inv:  self.sessions->forAll(s:Session | s.participants->includes(self))
+inv: File::allInstances()->isUnique(x | x.name)
+inv: User::allInstances()->forall(x, y |                         x.uid = y.uid implies x.groups = y.groups)
+inv AtLeastOneTruckPerPerson: self.truck->notEmpty()
+inv NumberOfDrivenTrucksNotZero: self.truck->size() <> 0
+inv AllPersonsWithDriversLicenseAdult:         self.driversLicense->notEmpty() implies self.age > 17
+inv AllDriversAllowedToDriveTheirTrucks :       self.truck->forAll( t:Truck | self.isAllowedToDriveTruck(             self.driversLicense.licenseClass, t.oclAsType(Vehicles.Vehicle).tons))
+inv FeatureOfLicenseClassCE:      Truck::allInstances()->forAll( t : Truck |        self.isAllowedToDriveTruck( 'CE', t.tons ) )
+inv NoPersonMoreThan18Points:      self.ticket->iterate( t : Ticket ; sum : Integer = 0 |        sum + t.points ) <= 18
+inv AllLicenseOwnersAdult: person.age > 17
+inv MinimumDimension:         self.lengthLoadingSpace > 5.0 and self.widthLoadingSpace > 1.0 and         self.heightLoadingSpace > 2.0
+inv MinimumCapacity: self.capacityLoadingSpace() > 10.0
+inv PointsNotNegative: self.points >= 0
+inv NoTicketMoreThan18Points: self.points <= 18
+inv NoTicketWithoutTruck: self.person.truck->notEmpty()
