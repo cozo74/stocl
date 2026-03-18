@@ -1,0 +1,226 @@
+inv NonNegativeAtomicWeight: Atom.allInstances()->forAll(a| a.weight > 0)
+inv UniqueAtomicWeight: Atom.allInstances()->isUnique(weight)
+inv InertNobleGases: Molecule.allInstances()->forAll(m| m.particle->select(x| x.nobleGas)->isEmpty() )
+inv AtLeastOneNobleGas: Atom.allInstances()->exists(x| x.nobleGas)
+inv nameIsKey: Person.allInstances() ->isUnique(name)
+inv isbnIsKey: Book.allInstances() ->isUnique(isbn)
+inv idIsKey: BookSeries.allInstances() ->isUnique(id)
+inv idAndNumberIdentifyBookSeriesIssue: self.bookSeriesIssue ->isUnique(number)
+inv issnIsKey: Journal.allInstances() ->isUnique(issn)
+inv titleIsKey: Journal.allInstances() ->isUnique(title)
+inv journalAndVolumeIdentifyJournalVolume: self.journalVolume ->isUnique(volume)
+inv journalVolumeAndNumberIdentifyJournalIssue: self.journalIssue ->isUnique(number)
+inv journalAndTitleIdentifyJournalSection: self.journalSection ->isUnique(title)
+inv nameIsKey: ConferenceSeries.allInstances() ->isUnique(name)
+inv titleIsKey: ConferenceEdition.allInstances() ->isUnique(title)
+inv correctPagination: self.iniPage <= self.endPage
+inv correctPagination: self.iniPage <= self.endPage
+inv correctPagination: self.journalPaper ->forAll(p1,p2 | p1<>p2 implies p1.iniPage > p2.endPage or p2.iniPage > p1.endPage)
+inv correctPagination: self.bookChapter ->forAll(c1,c2 | c1<>c2 implies c1.iniPage > c2.endPage or c2.iniPage > c1.endPage)
+inv correctPagination: self.bookChapter ->forAll(c1,c2 | c1<>c2 implies c1.iniPage > c2.endPage or c2.iniPage > c1.endPage)
+inv consecutiveVolumes: self.journalVolume ->sortedBy(volume).volume = sequence{1..self.journalVolume()->size()}
+inv compatibleYear: (self.conferenceEdition ->notEmpty()) implies self.publicationYear >= self.conferenceEdition.year
+inv compatibleYear: (self.conferenceEdition ->notEmpty()) implies self.publicationYear >= self.conferenceEdition.year
+inv compatibleYear: (self.conferenceEdition ->notEmpty()) implies self.year >= self.conferenceEdition.year
+inv editedBookWithoutRepetitions: self.bookSection ->isUnique(title)
+inv bookSeriesIssueWithoutRepetitions: self.bookSection ->isUnique(title)
+inv journalSectionWithoutRepetitions: self.journalPaper ->isUnique(title)
+inv bookSectionWithoutRepetitions: self.bookChapter ->isUnique(title)
+inv conferenceIsPublished: self.editedBook ->notEmpty() or self.bookSeriesIssue ->notEmpty() or self.journalIssue ->notEmpty()
+inv EPC_AOS_MndtRltInfAmdmntInfDtls: self.orgnlCdtrSchmeId.pstlAdr->size() = 0 and self.orgnlCdtrSchmeId.id.orgId->size() = 0 and self.orgnlCdtrSchmeId.ctryOfRes->size() = 0 and self.orgnlCdtrAgt->size() = 0 and self.orgnlCdtrAgtAcct->size() = 0 and self.orgnlDbtr->size() = 0 and self.orgnlDbtrAgtAcct->size() = 0 and self.orgnlFnlColltnDt->size() = 0 and self.orgnlFrqcy->size() = 0
+inv EPC_PACS3Mapping_amdmntInfDtlsorgnlCdtrSchmeId: orgnlCdtrSchmeId.id.orgId->size() = 0 and orgnlCdtrSchmeId.id.prvtId.issr->size() = 0 and orgnlCdtrSchmeId.id.prvtId.drvrsLicNb->size() = 0 and orgnlCdtrSchmeId.id.prvtId.cstmrNb->size() = 0 and orgnlCdtrSchmeId.id.prvtId.sclSctyNb->size() = 0 and orgnlCdtrSchmeId.id.prvtId.alnRegnNb->size() = 0 and orgnlCdtrSchmeId.id.prvtId.psptNb->size() = 0  and orgnlCdtrSchmeId.id.prvtId.taxIdNb->size() = 0 and orgnlCdtrSchmeId.id.prvtId.idntyCardNb->size() = 0  and orgnlCdtrSchmeId.id.prvtId.mplyrIdNb->size() = 0 and orgnlCdtrSchmeId.id.prvtId.dtAndPlcOfBirth->size() = 0
+inv EPC_PACS3Mapping_amdmntInfDtlsOrgnldbtrAgt: orgnlDbtrAgt.finInstnId.clrSysMmbId->size() = 0 and orgnlDbtrAgt.finInstnId.nmAndAdr->size() =0 and orgnlDbtrAgt.finInstnId.bIC->size() = 0 and orgnlDbtrAgt.finInstnId.cmbndId->size() = 0 and orgnlDbtrAgt.brnchId->size() = 0
+inv EPC_RmtInfstrdcdtrRefInfTpCd: cdtrRefTp.cd='SCOR'
+inv EPC_AOS_CdtrSchmeId: cdtrSchmeId.oclIsUndefined() or (cdtrSchmeId.nm->size() = 0 and cdtrSchmeId.pstlAdr->size() = 0 and cdtrSchmeId.id.orgId->size() = 0 and cdtrSchmeId.ctryOfRes->size() = 0)
+inv EPC_AOS_DrctDbtTx: self.preNtfctnId->size() = 0 and self.preNtfctnDt->size() = 0
+inv EPC_cdtrSchmeId_prvtIdOnlyOne: cdtrSchmeId.oclIsUndefined() or cdtrSchmeId.id.prvtId->size() <=1
+inv EPC_cdtrSchmeId_prvtId_SEPA: cdtrSchmeId.oclIsUndefined() or cdtrSchmeId.id.prvtId->forAll(a | a.othrId.idTp='SEPA')
+inv EPC_mndtRltdInf_OrgnlcdtrSchmeId_prvtId_SEPA: self.mndtRltdInf.oclIsUndefined() or self.mndtRltdInf.amdmntInfDtls.oclIsUndefined() or self.mndtRltdInf.amdmntInfDtls.orgnlCdtrSchmeId.id.prvtId->forAll(a | a.othrId.idTp='SEPA')
+inv EPC_mndtRltdInf_orgnlCdtrSchmeId_prvtIdOnlyOne: self.mndtRltdInf.oclIsUndefined() or self.mndtRltdInf.amdmntInfDtls.oclIsUndefined() or self.mndtRltdInf.amdmntInfDtls.orgnlCdtrSchmeId.id.prvtId->size() <=1
+inv EPC_PACS3Mapping_drctDbtTxcdtrSchmeId: cdtrSchmeId.oclIsUndefined() or (cdtrSchmeId.id.orgId->size() = 0 and cdtrSchmeId.id.prvtId.issr->size() = 0 and cdtrSchmeId.id.prvtId.drvrsLicNb->size() = 0 and cdtrSchmeId.id.prvtId.cstmrNb->size() = 0 and cdtrSchmeId.id.prvtId.sclSctyNb->size() = 0 and cdtrSchmeId.id.prvtId.alnRegnNb->size() = 0 and cdtrSchmeId.id.prvtId.psptNb->size() = 0  and cdtrSchmeId.id.prvtId.taxIdNb->size() = 0 and cdtrSchmeId.id.prvtId.idntyCardNb->size() = 0  and cdtrSchmeId.id.prvtId.mplyrIdNb->size() = 0 and cdtrSchmeId.id.prvtId.dtAndPlcOfBirth->size() = 0)
+inv EPC_AOS_DbtrAgtAcct: self.dbtrAgtAcct->size() = 0
+inv EPC_AOS_DrctDbtTxInf: self.rgltryRptg->size() = 0 and self.tax->size() = 0 and self.rltdRmtInf->size() = 0
+inv EPC_AOS_DrctDbtTxInfDbtr: dbtr.pstlAdr.adrTp->size() = 0 and dbtr.pstlAdr.strtNm->size() = 0 and dbtr.pstlAdr.bldgNb->size() = 0 and dbtr.pstlAdr.pstCd->size() = 0 and dbtr.pstlAdr.twnNm->size() = 0 and dbtr.pstlAdr.ctrySubDvsn->size() = 0 and dbtr.ctryOfRes->size() = 0
+inv EPC_AOS_DrctDbtTxInfPmtTpInf: self.pmtTpInf->size() = 0
+inv EPC_AOS_DrctDbtTxInfPurpPrtry: self.purp.prtry->size() = 0
+inv EPC_AOS_DrctDbtTxInfUltmtCdtr: ultmtCdtr.oclIsUndefined() or (ultmtCdtr.pstlAdr->size() = 0 and ultmtCdtr.ctryOfRes->size() = 0)
+inv EPC_AOS_DrctDbtTxInfUltmtDbtr: ultmtDbtr.oclIsUndefined() or (ultmtDbtr.pstlAdr->size() = 0 and ultmtDbtr.ctryOfRes->size() = 0)
+inv EPC_AOS_InstrForCdtrAgt: self.instrForCdtrAgt->size() = 0
+inv EPC_Charge_Bearer: self.chrgBr->size() = 0
+inv EPC_DbtrAcctId: dbtrAcct.id.bBAN->size() = 0 and dbtrAcct.id.prtryAcct->size() = 0 and dbtrAcct.id.uPIC->size() = 0 and dbtrAcct.tp->size() = 0 and dbtrAcct.ccy->size() = 0 and dbtrAcct.nm->size() = 0
+inv EPC_DbtradrLine: dbtr.pstlAdr.adrLine->size() >0 implies dbtr.pstlAdr.adrLine->size() <= 2
+inv EPC_dbtrAgtfinInstnId: dbtrAgt.finInstnId.clrSysMmbId->size() = 0 and dbtrAgt.finInstnId.nmAndAdr->size() =0 and dbtrAgt.finInstnId.prtryId->size() = 0 and dbtrAgt.finInstnId.cmbndId->size() = 0 and dbtrAgt.brnchId->size() = 0
+inv EPC_dbtrNm: dbtr.nm->size() > 0
+inv EPC_drctDbtTxInfdbtrIdOrgId: dbtr.id.orgId->size() = 1 implies  (dbtr.id.orgId.bIC->size() +   dbtr.id.orgId.iBEI->size() +   dbtr.id.orgId.bEI->size() +   dbtr.id.orgId.eANGLN->size() +   dbtr.id.orgId.uSCHU->size() +   dbtr.id.orgId.dUNS->size() +   dbtr.id.orgId.bkPtyId->size() +   dbtr.id.orgId.taxIdNb->size() +   dbtr.id.orgId.prtryId->size()) <= 1
+inv EPC_drctDbtTxInfdbtrIdprvtId: dbtr.id.oclIsUndefined() or dbtr.id.prvtId->size() <=1
+inv EPC_DrctDbTxInf_MandatoryFields: self.drctDbtTx->size() > 0 and self.drctDbtTx.mndtRltdInf->size() > 0 and self.drctDbtTx.mndtRltdInf.mndtId->size() >0 and self.drctDbtTx.mndtRltdInf.dtOfSgntr->size() > 0
+inv EPC_drctDbtTxInfUltmdbtrIdorgId: ultmtDbtr.id.orgId->size() = 1 implies  (ultmtDbtr.id.orgId.bIC->size() +   ultmtDbtr.id.orgId.iBEI->size() +   ultmtDbtr.id.orgId.bEI->size() +   ultmtDbtr.id.orgId.eANGLN->size() +   ultmtDbtr.id.orgId.uSCHU->size() +   ultmtDbtr.id.orgId.dUNS->size() +   ultmtDbtr.id.orgId.bkPtyId->size() +   ultmtDbtr.id.orgId.taxIdNb->size() +   ultmtDbtr.id.orgId.prtryId->size()) <= 1
+inv EPC_drctDbtTxInfultmtcdtrIdorgId: ultmtCdtr.id.orgId->size() = 1 implies  (ultmtCdtr.id.orgId.bIC->size() +   ultmtCdtr.id.orgId.iBEI->size() +   ultmtCdtr.id.orgId.bEI->size() +   ultmtCdtr.id.orgId.eANGLN->size() +   ultmtCdtr.id.orgId.uSCHU->size() +   ultmtCdtr.id.orgId.dUNS->size() +   ultmtCdtr.id.orgId.bkPtyId->size() +   ultmtCdtr.id.orgId.taxIdNb->size() +   ultmtCdtr.id.orgId.prtryId->size()) <= 1
+inv EPC_drctDbtTxInfultmtCdtrIdprvtId: ultmtCdtr.oclIsUndefined() or ultmtCdtr.id.prvtId->size() <=1
+inv EPC_drctDbtTxInfultmtDbtrIdprvtId: ultmtDbtr.oclIsUndefined() or ultmtDbtr.id.prvtId->size() <=1
+inv EPC_DrctDbTxInfchrgBr: chrgBr = 'SLEV'
+inv EPC_InstdAmtEURO: instdAmt.ccy = 'EUR'
+inv EPC_InstrdAmtValueRange: instdAmt.value >= 0.01 and instdAmt.value <= 999999999.99
+inv EPC_AOS_GrpHdr: self.authstn->size() = 0 and self.fwdgAgt->size() = 0 and self.initgPty.pstlAdr->size() = 0 and self.initgPty.ctryOfRes->size() = 0
+inv EPC_GrpHdrGrpgMIXD: grpg='MIXD'
+inv EPC_GprHdrInitgPtyIdorgId: initgPty.id.orgId->size() = 1 implies  (initgPty.id.orgId.bIC->size() +   initgPty.id.orgId.iBEI->size() +   initgPty.id.orgId.bEI->size() +   initgPty.id.orgId.eANGLN->size() +   initgPty.id.orgId.uSCHU->size() +   initgPty.id.orgId.dUNS->size() +   initgPty.id.orgId.bkPtyId->size() +   initgPty.id.orgId.taxIdNb->size() +   initgPty.id.orgId.prtryId->size()) <= 1
+inv EPC_GrpHdrprvtId: initgPty.id.oclIsUndefined() or initgPty.id.prvtId->size() <=1
+inv EPC_lclInstrmCd: cd = 'B2B'
+inv AmendmentIndicatorRule: (self.amdmntInd implies self.amdmntInfDtls->size() > 0) and (not self.amdmntInd implies self.amdmntInfDtls->size() = 0)
+inv EPC_AOS_MndtRltInf: self.frstColltnDt->size() = 0 and self.fnlColltnDt->size() = 0 and self.frqcy->size() = 0
+inv EPC_mndtRltdInf_AmdmntInd: self.amdmntInd implies self.amdmntInfDtls->size() > 0
+inv EPC_orgnlDbtrAcctId: amdmntInfDtls.oclIsUndefined() or (amdmntInfDtls.orgnlDbtrAcct.id.bBAN->size() = 0 and amdmntInfDtls.orgnlDbtrAcct.id.prtryAcct->size() = 0 and amdmntInfDtls.orgnlDbtrAcct.id.uPIC->size() = 0 and amdmntInfDtls.orgnlDbtrAcct.tp->size() = 0 and amdmntInfDtls.orgnlDbtrAcct.ccy->size() = 0 and amdmntInfDtls.orgnlDbtrAcct.nm->size() = 0)
+inv Grouping1Rule: (self.grpHdr.grpg->size() > 0 and self.grpHdr.grpg = 'GRPD') implies self.pmtInf->size() = 1
+inv Grouping2Rule: grpHdr.grpg='SNGL' implies self.pmtInf->forAll(a | a.drctDbtTxInf->size()=1)
+inv ChargeBearerRule: (chrgBr->size() > 0 implies drctDbtTxInf->forAll(chrgBr.oclIsUndefined())) and (not drctDbtTxInf->forAll(chrgBr.oclIsUndefined()) implies chrgBr->size() = 0)
+inv ChargesAccountAgentRule: self.chrgsAcctAgt->size() = 1 implies self.cdtrAgt.brnchId->size() = 1 and self.chrgsAcctAgt.finInstnId.clrSysMmbId = self.cdtrAgt.finInstnId.clrSysMmbId and self.chrgsAcctAgt.finInstnId.cmbndId = self.cdtrAgt.finInstnId.cmbndId and self.chrgsAcctAgt.finInstnId.nmAndAdr = self.cdtrAgt.finInstnId.nmAndAdr and self.chrgsAcctAgt.finInstnId.prtryId = self.cdtrAgt.finInstnId.prtryId and self.chrgsAcctAgt.finInstnId.bIC = self.cdtrAgt.finInstnId.bIC
+inv ChargesAccountRule: self.chrgsAcctAgt->size() > 0 implies self.chrgsAcct->size() > 0
+inv EPC_AOS_Cdtr: self.cdtr.pstlAdr.adrTp->size() = 0 and self.cdtr.pstlAdr.strtNm->size() = 0 and self.cdtr.pstlAdr.bldgNb->size() = 0 and self.cdtr.pstlAdr.pstCd->size() = 0 and self.cdtr.pstlAdr.twnNm->size() = 0 and self.cdtr.pstlAdr.ctrySubDvsn->size() = 0 and self.cdtr.id->size() = 0 and self.cdtr.ctryOfRes->size() = 0
+inv EPC_AOS_CdtrAcct: self.cdtrAcct.tp->size() = 0 and self.cdtrAcct.nm->size() = 0
+inv EPC_AOS_CdtrAgtAcct: self.cdtrAgtAcct->size() = 0
+inv EPC_AOS_ChrgsAcct: self.chrgsAcct->size() = 0
+inv EPC_AOS_ChrgsAcctAgt: self.chrgsAcctAgt->size() = 0
+inv EPC_AOS_UltmtCdtr: ultmtCdtr.oclIsUndefined() or (ultmtCdtr.pstlAdr->size() = 0 and ultmtCdtr.ctryOfRes->size() = 0)
+inv EPC_CdtrAcctId: cdtrAcct.id.bBAN->size() = 0 and cdtrAcct.id.prtryAcct->size() = 0 and cdtrAcct.id.uPIC->size() = 0
+inv EPC_CdtrAdrLine: cdtr.pstlAdr.adrLine->size() >0 implies cdtr.pstlAdr.adrLine->size() <= 2
+inv EPC_cdtrAgtFinInstnId: cdtrAgt.finInstnId.clrSysMmbId->size() = 0 and cdtrAgt.finInstnId.nmAndAdr->size() =0 and cdtrAgt.finInstnId.prtryId->size() = 0 and cdtrAgt.finInstnId.cmbndId->size() =0 and cdtrAgt.brnchId->size() = 0
+inv EPC_cdtrNm: cdtr.nm->size() > 0
+inv EPC_cdtrSchmeId: drctDbtTxInf.drctDbtTx.cdtrSchmeId->forAll(a, b |   a.oclIsUndefined() or b.oclIsUndefined() or   (a.id.prvtId.othrId.id = b.id.prvtId.othrId.id and   a.id.prvtId.othrId.idTp = b.id.prvtId.othrId.idTp))
+inv EPC_cdtrSchmeId_UNUSED_FULL: drctDbtTxInf.drctDbtTx.cdtrSchmeId->forAll(a, b |   let aOrgId: OrganisationIdentification2 = a.id.orgId in   let bOrgId: OrganisationIdentification2 = b.id.orgId in   let aPrvtId: OrderedSet(PersonIdentification3) = a.id.prvtId in   let bPrvtId: OrderedSet(PersonIdentification3) = b.id.prvtId in     a.nm = b.nm and     aOrgId.bIC= bOrgId.bIC and     aOrgId.iBEI= bOrgId.iBEI and     aOrgId.bEI= bOrgId.bEI and     aOrgId.eANGLN= bOrgId.eANGLN and     aOrgId.uSCHU= bOrgId.uSCHU and     aOrgId.dUNS = bOrgId.dUNS and     aOrgId.bkPtyId = bOrgId.bkPtyId and     aOrgId.taxIdNb = bOrgId.taxIdNb and     aOrgId.prtryId.id = bOrgId.prtryId.id and     aOrgId.prtryId.issr = bOrgId.prtryId.issr and     aPrvtId.drvrsLicNb = bPrvtId.drvrsLicNb and     aPrvtId.cstmrNb= bPrvtId.cstmrNb and     aPrvtId.sclSctyNb = bPrvtId.sclSctyNb and     aPrvtId.alnRegnNb= bPrvtId.alnRegnNb and     aPrvtId.psptNb = bPrvtId.psptNb and     aPrvtId.taxIdNb = bPrvtId.taxIdNb and     aPrvtId.idntyCardNb = bPrvtId.idntyCardNb and     aPrvtId.mplyrIdNb = bPrvtId.mplyrIdNb and     aPrvtId.othrId.id = bPrvtId.othrId.id and     aPrvtId.othrId.idTp = bPrvtId.othrId.idTp and     aPrvtId.issr = bPrvtId.issr and     a.ctryOfRes = b.ctryOfRes)
+inv EPC_PmtInfchrgBr: chrgBr = 'SLEV'
+inv EPC_PmtInfId: self.pmtInfId->size() > 0
+inv EPC_PmtInfultmtCdtrIdorgId: ultmtCdtr.id.orgId->size() = 1 implies  (ultmtCdtr.id.orgId.bIC->size() +   ultmtCdtr.id.orgId.iBEI->size() +   ultmtCdtr.id.orgId.bEI->size() +   ultmtCdtr.id.orgId.eANGLN->size() +   ultmtCdtr.id.orgId.uSCHU->size() +   ultmtCdtr.id.orgId.dUNS->size() +   ultmtCdtr.id.orgId.bkPtyId->size() +   ultmtCdtr.id.orgId.taxIdNb->size() +   ultmtCdtr.id.orgId.prtryId->size()) <= 1
+inv EPC_PmtInfultmtCdtrIdprvtId: ultmtCdtr.oclIsUndefined() or ultmtCdtr.id.prvtId->size() <=1
+inv EPC_PmtTpInf: self.pmtTpInf->size() > 0
+inv EPC_pmtTpInfSeqTp: self.drctDbtTxInf->forAll(a |   (a.drctDbtTx.mndtRltdInf.amdmntInd and   a.drctDbtTx.mndtRltdInf.amdmntInfDtls.orgnlDbtrAgt.finInstnId.prtryId.id = 'SMNDA') implies       a.pmtTpInf.seqTp = 'FRST')
+inv EPC_Ultimatecdtr: self.ultmtCdtr->size() > 0 implies self.drctDbtTxInf->forAll(a | a.ultmtCdtr->size() = 0)
+inv PaymentTypeInformationRule: pmtTpInf->size()>0 implies drctDbtTxInf->forAll(pmtTpInf.oclIsUndefined())
+inv UltimateCreditorIndrctDbtTxInfGuideline: drctDbtTxInf->forAll(a |(a.ultmtCdtr.nm->size() = 1 implies                 a.ultmtCdtr.nm <> cdtr.nm) and ((a.ultmtCdtr.id.orgId.bIC->size() = 1 and cdtr.id.orgId.bIC->size() = 1) implies     a.ultmtCdtr.id.orgId.bIC <> cdtr.id.orgId.bIC) and ((a.ultmtCdtr.id.orgId.iBEI->size() = 1 and cdtr.id.orgId.iBEI->size() = 1) implies     a.ultmtCdtr.id.orgId.iBEI <> cdtr.id.orgId.iBEI) and ((a.ultmtCdtr.id.orgId.bEI->size() = 1 and cdtr.id.orgId.bEI->size() = 1) implies     a.ultmtCdtr.id.orgId.bEI <> cdtr.id.orgId.bEI) and ((a.ultmtCdtr.id.orgId.eANGLN->size() = 1 and cdtr.id.orgId.eANGLN->size() = 1) implies     a.ultmtCdtr.id.orgId.eANGLN <> cdtr.id.orgId.eANGLN) and ((a.ultmtCdtr.id.orgId.uSCHU->size() = 1 and cdtr.id.orgId.uSCHU->size() = 1) implies     a.ultmtCdtr.id.orgId.uSCHU <> cdtr.id.orgId.uSCHU) and ((a.ultmtCdtr.id.orgId.dUNS->size() = 1 and cdtr.id.orgId.dUNS->size() = 1) implies     a.ultmtCdtr.id.orgId.dUNS <> cdtr.id.orgId.dUNS) and ((a.ultmtCdtr.id.orgId.bkPtyId->size() = 1 and cdtr.id.orgId.bkPtyId->size() = 1) implies     a.ultmtCdtr.id.orgId.bkPtyId <> cdtr.id.orgId.bkPtyId) and ((a.ultmtCdtr.id.orgId.taxIdNb->size() = 1 and cdtr.id.orgId.taxIdNb->size() = 1) implies     a.ultmtCdtr.id.orgId.taxIdNb <> cdtr.id.orgId.taxIdNb) and ((a.ultmtCdtr.id.orgId.prtryId.id->size() = 1 and cdtr.id.orgId.prtryId.id->size() = 1) implies     a.ultmtCdtr.id.orgId.prtryId.id <> cdtr.id.orgId.prtryId.id) and ((a.ultmtCdtr.id.prvtId.drvrsLicNb->size() = 1 and cdtr.id.prvtId.drvrsLicNb->size() = 1) implies     a.ultmtCdtr.id.prvtId.drvrsLicNb <> cdtr.id.prvtId.drvrsLicNb) and ((a.ultmtCdtr.id.prvtId.cstmrNb->size() = 1 and cdtr.id.prvtId.cstmrNb->size() = 1) implies     a.ultmtCdtr.id.prvtId.cstmrNb <> cdtr.id.prvtId.cstmrNb) and ((a.ultmtCdtr.id.prvtId.sclSctyNb->size() = 1 and cdtr.id.prvtId.sclSctyNb->size() = 1) implies     a.ultmtCdtr.id.prvtId.sclSctyNb <> cdtr.id.prvtId.sclSctyNb) and ((a.ultmtCdtr.id.prvtId.alnRegnNb->size() = 1 and cdtr.id.prvtId.alnRegnNb->size() = 1) implies     a.ultmtCdtr.id.prvtId.alnRegnNb <> cdtr.id.prvtId.alnRegnNb) and ((a.ultmtCdtr.id.prvtId.psptNb->size() = 1 and cdtr.id.prvtId.psptNb->size() = 1) implies     a.ultmtCdtr.id.prvtId.psptNb <> cdtr.id.prvtId.psptNb) and ((a.ultmtCdtr.id.prvtId.taxIdNb->size() = 1 and cdtr.id.prvtId.taxIdNb->size() = 1) implies     a.ultmtCdtr.id.prvtId.taxIdNb <> cdtr.id.prvtId.taxIdNb) and ((a.ultmtCdtr.id.prvtId.idntyCardNb->size() = 1 and cdtr.id.prvtId.idntyCardNb->size() = 1) implies     a.ultmtCdtr.id.prvtId.idntyCardNb <> cdtr.id.prvtId.idntyCardNb) and ((a.ultmtCdtr.id.prvtId.mplyrIdNb->size() = 1 and cdtr.id.prvtId.mplyrIdNb->size() = 1) implies     a.ultmtCdtr.id.prvtId.mplyrIdNb <> cdtr.id.prvtId.mplyrIdNb) and ((a.ultmtCdtr.id.prvtId.othrId->size() = 1 and cdtr.id.prvtId.othrId->size() = 1) implies     (a.ultmtCdtr.id.prvtId.othrId.id <> cdtr.id.prvtId.othrId.id or a.ultmtCdtr.id.prvtId.othrId.idTp <> cdtr.id.prvtId.othrId.idTp)) )
+inv EPC_AOS_PmtTpInf: self.instrPrty->size() = 0 and self.svcLvl.prtry->size() = 0 and self.clrChanl->size() = 0 and self.lclInstrm.prtry->size() = 0
+inv EPC_LclInstrm: self.lclInstrm->size() > 0
+inv EPC_SvcLvl: self.svcLvl->size() > 0
+inv EPC_AOS_RmtInfStrd: strd.rfrdDocInf->size() = 0 and strd.rfrdDocRltdDt->size() = 0 and strd.rfrdDocAmt->size() = 0 and strd.cdtrRefInf.cdtrRefTp.prtry->size() = 0 and strd.invcr->size() = 0 and strd.invcee->size() = 0 and strd.addtlRmtInf->size() = 0
+inv EPC_RmtInfStrd: self.strd->size() = 1
+inv EPC_rmtInfustrd: self.ustrd->size() = 1
+inv EPC_rmtInfustrd: self.ustrd->size() = 1
+inv EPC_svcLvlCd: cd = 'SEPA'
+inv EPC_svcLvlCd: cd = 'SEPA'
+inv minStock: Product.allInstances()->forAll(p|p.stock>=5)
+inv minStock: Product.allInstances()->forAll(p|p.stock>=5)
+inv salesAmount: GoldCustomer.allInstances()->forAll(g| g.sale->select(s| s.paid)->collect(amount)->sum()>10)
+inv NoRentalsBlackListed: self.rental->forAll(r | r.startDate < self.blackListedDate)
+inv CarFleet: Car.allInstances()->size()>100
+inv QuoteOverZero: self.value > 0
+inv CorrectProduct:  self.price>0 and self.maxDiscount<=60
+inv NotTooPendingSales: self.customer->forAll(c| c.sale->select(s|s.paymentDate>Time::now())->collect(amount)->sum()<=self.maxPendingAmount)
+inv NotTooPendingSales: not( self.customer->forAll(c| c.sale->select(s|s.paymentDate>Time::now())->collect(sa|sa.amount)->sum()<=self.maxPendingAmount) )
+inv AtMostOneInitialWorld :     AbInitWorld.allInstances->size() < 2
+inv PredWorldExisting :     self.pred->size() = 1
+inv BelongsToPurse :     AbWorld.allInstances()->forAll( world | world.abAuthPurse->exists( purse | purse.coinBalance->union( purse.coinLost )->includes( self ) ) )
+inv AuthorsOfStudentPaper: Paper.allInstances()->forAll(p|p.studentPaper = p.author->exists(x|x.isStudent))
+inv LimitsOnStudentPapers: Paper.allInstances()->exists(p|p.studentPaper) and Paper.allInstances()->select(p|p.studentPaper)->size() < 5
+inv PaperLength: Paper.allInstances()->forAll(p|p.wordCount < 10000)
+inv NoStudentReviewers: Paper.allInstances()->forAll(p| p.referee->forAll(r| not r.isStudent))
+inv AuthorsOfStudentPaper: Paper.allInstances()->forAll(p|p.studentPaper = p.author->exists(x|x.isStudent))
+inv LimitsOnStudentPapers: Paper.allInstances()->exists(p|p.studentPaper) and Paper.allInstances()->select(p|p.studentPaper)->size() < 5
+inv PaperLength: Paper.allInstances()->forAll(p|p.wordCount < 10000)
+inv NoSelfReviews: Researcher.allInstances()->forAll(r|r.submission->excludes(r.manuscript))
+inv NoStudentReviewers: Paper.allInstances()->forAll(p| p.referee->forAll(r| not r.isStudent))
+inv invariant_ServiceLevel19 : 	(Sequence{'a', 'b', 'c', 'c', 'd', 'e'}->prepend('X')) = Sequence{'X', 'a', 'b', 'c', 'c', 'd', 'e'}
+inv invariant_ServiceLevel17 : 	(OrderedSet{'a', 'b', 'c', 'd'}->subOrderedSet(2, 3)) = OrderedSet{'b', 'c'}
+inv invariant_ServiceLevel4 : 	Bag{Set{1, 2}, Set{1, 2}, Set{4, 5, 6}}->isEmpty()
+inv invariant_ServiceLevel12 : 	(OrderedSet{'a', 'b', 'c', 'd'}->last()) = 'd'
+inv invariant_ServiceLevel18 : 	(Sequence{'a', 'b', 'c', 'c', 'd', 'e'}->append('X')) = Sequence{'a', 'b', 'c', 'c', 'd', 'e', 'X'}
+inv invariant_ServiceLevel1 : 	self.program.partners->isEmpty()
+inv invariant_ServiceLevel10 : 	(Set{1, 4, 7, 10}->symmetricDifference(Set{4, 5, 7})) = Set{1, 5, 10}
+inv invariant_ServiceLevel7 : 	Sequence{2, 1, 2, 3, 5, 6, 4}->isEmpty()
+inv invariant_ServiceLevel5 : 	Bag {1, 1, 2, 2, 4, 5, 6}->isEmpty()
+inv invariant_ServiceLevel16 : 	(Sequence{'a', 'b', 'c', 'c', 'd', 'e'}->subSequence(3, 5)) = Sequence{'c', 'c', 'd'}
+inv invariant_ServiceLevel6 : 	Sequence{Set{1, 2}, Set{2, 3}, Set{4, 5, 6}}->isEmpty()
+inv invariant_ServiceLevel13 : 	(Sequence{'a', 'b', 'c', 'c', 'd', 'e'}->at(3)) = 'c'
+inv invariant_ServiceLevel3 : 	Set{1, 2, 3, 4, 5, 6}->isEmpty()
+inv invariant_ServiceLevel11 : 	(Sequence{'a', 'b', 'c', 'c', 'd', 'e'}->first()) = 'a'
+inv invariant_ServiceLevel8 : 	((Set{1, 4, 7, 10}) - Set{4, 7}) = Set{1, 10}
+inv invariant_ServiceLevel2 : 	Set{Set{1, 2}, Set{2, 3}, Set{4, 5, 6}}->isEmpty()
+inv invariant_ServiceLevel9 : 	((OrderedSet{12, 9, 6, 3}) - Set{1, 3, 2}) = OrderedSet{12, 9, 6}
+inv invariant_ServiceLevel14 : 	(Sequence{'a', 'b', 'c', 'c', 'd', 'e'}->indexOf('c')) = 3
+inv invariant_ServiceLevel15 : 	(OrderedSet{'a', 'b', 'c', 'd'}->insertAt(3, 'X')) = OrderedSet{'a', 'b', 'X', 'c', 'd'}
+inv invariant_Transaction1 : 	self.oclIsKindOf(Transaction) = true
+inv invariant_Transaction3 : 	self.oclIsTypeOf(Burning) = false
+inv invariant_Transaction2 : 	self.oclIsTypeOf(Transaction) = true
+inv invariant_Transaction4 : 	self.oclIsKindOf(Burning) = false
+inv invariant_points : 	(self.points > 0) implies self.transactions->exists( t : Transaction | t.points > 0 )
+inv invariant_transactions : 	self.transactions->collect( points )->exists( p : Integer | p = 500 )
+inv invariant_oneOwner : 	(self.transactions->collect( card )->collect(owner )->size()) = 1
+inv invariant_totalPointsEarning2 : 	self.deliveredServices->collect( transactions )->select( i_Transaction : Transaction | i_Transaction.oclIsTypeOf(Earning) )->collect( points )->sum() < 10000
+inv invariant_totalPointsEarning : 	(self.deliveredServices->collect( transactions )->select( i_Transaction : Transaction | i_Transaction.oclIsTypeOf(Earning) )->collect( i_Transaction : Transaction | i_Transaction.points )->sum()) < 10000
+inv invariant_nrOfParticipants : 	self.numberOfCustomers = self.programs->collect(participants )->size()
+inv invariant_totalPoints : 	(self.deliveredServices->collect(transactions )->collect(points )->sum()) < 10000
+inv invariant_ProgramPartner1 : 	self.programs->collect( partners )->select( p : ProgramPartner | p <> self )->isEmpty()
+inv invariant_nrOfParticipants2 : 	self.numberOfCustomers = self.programs->collect(participants )->size()
+inv invariant_Burning5 : 	self.oclIsTypeOf(Earning) = false
+inv invariant_Burning6 : 	self.oclIsKindOf(Earning) = false
+inv invariant_Burning4 : 	self.oclIsKindOf(Burning) = true
+inv invariant_Burning3 : 	self.oclIsTypeOf(Burning) = true
+inv invariant_Burning2 : 	self.oclIsTypeOf(Transaction) = false
+inv invariant_Burning1 : 	self.oclIsKindOf(Transaction) = true
+inv invariant_dates : 	self.lines->collect(date )->forAll( d : Date | d.isBefore(self.until) and d.isAfter(self.from) )
+inv invariant_cycle : 	self.card.transactions->includesAll(self.lines->collect( transaction ))
+inv invariant_CustomerCard4 : 	self.transactions->select( i_Transaction : Transaction | i_Transaction.points > 100 )->notEmpty()
+inv invariant_ofAge : 	self.owner.age >= 18
+inv invariant_CustomerCard3 : 	self.owner.programs->size() > 0
+inv invariant_checkDates : 	self.validFrom.isBefore(self.goodThru)
+inv invariant_Membership1 : 	(self.account.points >= 0) or self.account->isEmpty()
+inv invariant_Membership2 : 	self.participants.cards->collect( Membership )->includes(self)
+inv invariant_noEarnings : 	programs.partners.deliveredServices->forAll(pointsEarned = 0) implies account->isEmpty()
+inv invariant_correctCard : 	self.participants.cards->includes(self.card)
+inv invariant_Membership3 : 	self.programs.levels->includes(self.currentLevel)
+inv invariant_Membership4 : 	self.account->isEmpty()
+inv invariant_levelAndColor : 	((self.currentLevel.name = 'Silver') implies (self.card.color = RandLColor::silver) and self.currentLevel.name = 'Gold') implies self.card.color = RandLColor::gold
+inv invariant_Membership5 : 	self.programs.levels->includes(self.currentLevel)
+inv invariant_Service5 : 	'Anneke'.toUpperCase() = 'ANNEKE'
+inv invariant_Service6 : 	'Anneke'.toLowerCase() = 'anneke'
+inv invariant_Service7 : 	'Anneke and Jos'.substring(12,14) = 'Jos'
+inv invariant_Service4 : 	'Anneke '.concat('and Jos') = 'Anneke and Jos'
+inv invariant_Service1 : 	(self.pointsEarned > 0) implies not (self.pointsBurned = 0)
+inv invariant_Service3 : 	not ('Anneke' = 'Jos')
+inv invariant_Service2 : 	'Anneke'.size() = 6
+inv invariant_Customer4 : 	self.name = 'Edward'
+inv invariant_Customer5 : 	self.title = 'Mr.'
+inv invariant_Customer10 : 	self.programs->collect(partners)->collect(deliveredServices )->isEmpty()
+inv invariant_Customer2 : 	self.name = 'Edward'
+inv invariant_Customer9 : 	self.memberships->collect(account )->reject( i_LoyaltyAccount : LoyaltyAccount | not (i_LoyaltyAccount.points > 0) )->isEmpty()
+inv invariant_myInvariant23 : 	self.name = 'Edward'
+inv invariant_Customer1 : 	(self.cards->select( i_CustomerCard : CustomerCard | i_CustomerCard.valid)->size()) > 1
+inv invariant_Customer7 : 	(self.gender = Gender::male) implies self.title = 'Mr.'
+inv invariant_Customer11 : 	Set{1, 2, 3 }->iterate(i : Integer; sum : Integer = 0 | sum + i) = 0
+inv invariant_ANY : 	self.memberships->collect( account )->any( i_LoyaltyAccount : LoyaltyAccount | i_LoyaltyAccount.number < 10000 )->asSet()->isEmpty()
+inv invariant_ofAge : 	self.age >= 18
+inv invariant_sizesAgree : 	self.programs->size() = self.cards->select( i_CustomerCard | i_CustomerCard.valid)->size()
+inv invariant_Customer8 : 	self.memberships->collect( account )->select( i_LoyaltyAccount : LoyaltyAccount | i_LoyaltyAccount.points > 0 )->isEmpty()
+inv invariant_Customer6 : 	(self.name = 'Edward') and self.title = 'Mr.'
+inv invariant_Customer3 : 	self.name = 'Edward'
+inv invariant_Customer12 : 	self.programs->size() = self.cards->select( i_CustomerCard | i_CustomerCard.valid )->size()
+inv invariant_LoyaltyProgram18 : 	self.participants->forAll( c1 : Customer | self.participants->forAll( c2 : Customer | (c1 <> c2) implies c1.name <> c2.name ) )
+inv invariant_LoyaltyProgram1 : 	self.levels->includesAll(self.memberships->collect(currentLevel ))
+inv invariant_LoyaltyProgram17 : 	self.participants->forAll( c1 : Customer, c2 : Customer | (c1 <> c2) implies c1.name <> c2.name )
+inv invariant_LoyaltyProgram14 : 	self.memberships->collect( account )->isUnique(number )
+inv invariant_LoyaltyProgram10 : 	Sequence{1 .. 10}->isEmpty()
+inv invariant_firstLevel : 	self.levels->first().name = 'Silver'
+inv invariant_LoyaltyProgram8 : 	Bag {1, 3, 4, 3, 5}->isEmpty()
+inv invariant_knownServiceLevel : 	self.levels->includesAll(self.memberships->collect( currentLevel ))
+inv invariant_LoyaltyProgram13 : 	self.memberships->collect( account )->isUnique( number )
+inv invariant_minServices : 	(self.partners->collect( deliveredServices )->size()) >= 1
+inv invariant_LoyaltyProgram19 : 	self.memberships->collect( account )->one( i_LoyaltyAccount : LoyaltyAccount | i_LoyaltyAccount.number < 10000 )
+inv invariant_LoyaltyProgram12 : 	self.participants->size() < 10000
+inv invariant_LoyaltyProgram7 : 	Sequence{'ape', 'nut'}->isEmpty()
+inv invariant_LoyaltyProgram11 : 	Sequence{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}->isEmpty()
+inv invariant_LoyaltyProgram3 : 	Set{1, 2, 5, 88}->isEmpty()
+inv invariant_LoyaltyProgram2 : 	self.levels->exists( i_ServiceLevel : ServiceLevel | i_ServiceLevel.name = 'basic' )
+inv invariant_noAccounts : 	(self.partners->collect( deliveredServices )->forAll( i_Service : Service | (i_Service.pointsEarned = 0) and i_Service.pointsBurned = 0 )) implies self.memberships->collect( account )->isEmpty()
+inv invariant_LoyaltyProgram15 : 	self.memberships->collect(account )->isUnique( number )
+inv invariant_LoyaltyProgram4 : 	Set{'apple', 'orange', 'strawberry'}->isEmpty()
+inv invariant_LoyaltyProgram6 : 	Sequence{1, 3, 45, 2, 3}->isEmpty()
+inv invariant_LoyaltyProgram9 : 	Sequence{1 .. 6 + 4}->isEmpty()
+inv invariant_LoyaltyProgram5 : 	OrderedSet{'apple', 'orange', 'strawberry', 'pear'}->isEmpty()
+inv invariant_LoyaltyProgram16 : 	self.participants->forAll( i_Customer : Customer | i_Customer.age() <= 70 )

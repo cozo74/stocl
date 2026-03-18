@@ -1,0 +1,15 @@
+Model highway:
+
+
+
+context Car
+ inv: self.type - 1 >= 0
+ inv: self.type - 1 <= 12
+
+
+
+
+context Location
+ inv: self.expiredTime + 60000 > self.timestamp
+ inv: self.expiredTime + (60 * 1000) > self.timestamp
+ inv: self.expiredTime > self.timestamp - (60 * 1000)

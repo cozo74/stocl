@@ -1,0 +1,26 @@
+Model highway:
+
+
+
+context Car
+inv : self.type >= 0
+inv : self.type <= 13
+inv : self.type >= 0
+inv : self.type <= 13
+
+
+context Location
+inv: self.expiredTime > 0
+inv: self.timestamp > 0
+inv: self.expiredTime > 0
+inv: self.timestamp > 0
+
+
+
+inv: self.expiredTime > self.timestamp
+inv: self.timestamp < self.expiredTime
+
+inv: self.expiredTime > self.timestamp
+inv: self.timestamp < self.expiredTime
+
+

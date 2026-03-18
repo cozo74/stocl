@@ -1,0 +1,9 @@
+Model shenzhen:
+
+
+
+context Car
+
+
+ inv : Car.allInstances()->select(c | c.locate->select(l | l.timestamp>0)->size()>0 )->notEmpty()
+ inv : Car.allInstances()->select(c | c.locate->select(l | l.longitude>22.4000 and l.longitude<22.8667)->size()>0 )->isEmpty()

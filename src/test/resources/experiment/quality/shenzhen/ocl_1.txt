@@ -1,0 +1,27 @@
+Model shenzhen:
+
+
+context Car
+inv : self.speed >= 0
+inv : self.speed <= 120
+inv : self.direction >= 0
+inv : self.direction <= 360
+inv : self.status <= 100
+
+
+
+context Location
+inv: self.timestamp > 0
+inv : self.longitude > 113.7167
+inv : self.longitude < 114.6333
+inv : self.latitude > 22.4000
+inv : self.latitude < 22.8667
+
+
+
+
+
+
+inv: self.longitude > self.latitude
+inv: self.latitude < self.longitude
+

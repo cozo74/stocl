@@ -1,0 +1,117 @@
+
+model Highway
+
+-- classes
+
+class Truck
+attributes
+  plate : String
+  type : Integer
+  weight : Real
+  payloadCapacity : Real
+end
+
+class OBU
+attributes
+  batteryLevel : Integer
+end
+
+class PassRecord 
+attributes
+  plate : String
+  passWeight : Real
+  speed : Real
+end
+
+class Trip 
+attributes
+  entranceWeight : Real
+  totalToll : Real
+  status : Integer
+end
+
+
+class Road 
+attributes
+  maxSpeedLimit : Integer
+  minSpeedLimit : Integer
+end
+
+
+class RoadSideDevice 
+attributes
+  name : String
+  type : String
+  toll : Real
+  isClosed : Boolean
+end
+
+
+
+
+
+-- associations
+
+association EquippedWith between
+  Truck[1] role assignedTo
+  OBU[1] role equipped
+end
+
+association HasRecords between
+  OBU[1] role belongsTo
+  PassRecord[*] role records
+end
+
+association TripContains between
+  Trip[1] role containedBy
+  PassRecord[*] role contains
+end
+
+association Generates between
+  RoadSideDevice[1] role createdBy
+  PassRecord[*] role generated
+end
+
+association HasDevices between
+  Road[1] role installedOn
+  RoadSideDevice[*] role devices
+end
+
+
+-- OCL constraints
+
+constraints
+
+context Truck 
+  inv TypeCheck: self.type >= 4 and self.type <=6
+  inv ValidWeight: self.weight > 0
+  inv ValidPayloadCapacity: self.payloadCapacity > 0
+  
+
+context OBU
+  inv BatteryLevel: self.batteryLevel >= 5
+
+
+context PassRecord
+  inv TruckCheck: self.plate = self.belongsTo.assignedTo.plate
+  inv WeightChange: self.passWeight = self.containedBy.entranceWeight
+  inv OverSpeed: self.speed <= self.createdBy.installedOn.maxSpeedLimit
+
+
+context Trip
+  inv OverLoad: self.contains->forAll(r | r.passWeight <= r.belongsTo.assignedTo.weight + r.belongsTo.assignedTo.payloadCapacity) 
+  inv WeightChange: self.contains->forAll(r | r.passWeight = self.entranceWeight)
+
+  inv TollCheck: self.status = 1 implies self.totalToll = self.contains->collect(createdBy)->collect(toll)->sum()
+  inv StatusCheck: self.status = 1 or self.status = 0 or self.status = -1
+  inv HasEntryAndExit: self.contains->collect(createdBy)->collect(type)->includes('Entry') and self.contains->collect(createdBy)->collect(type)->includes('Exit')
+  inv EntryAndExitDiff: self.contains->collect(createdBy)->select(d | d.type='Entry' or d.type='Exit')->isUnique(type)
+
+
+context RoadSideDevice
+  inv StatusCheck: self.isClosed implies self.generated->isEmpty()
+  inv TypeCheck: self.type = 'Entry' or self.type = 'Gantry' or self.type = 'Exit'
+
+
+context Road
+  inv SpeedLimit: self.minSpeedLimit < self.maxSpeedLimit
