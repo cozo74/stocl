@@ -1,3 +1,3 @@
 # STOCL
 
-STOCL: Translating OCL Invariants to SQL Queries through Relational Algebra for Scalable Model Validation
+STOCL: Translating OCL into SQL via Relational Algebra for Efficient Constraint Checking
